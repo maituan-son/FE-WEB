@@ -1,6 +1,74 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { getProducts } from '../../api/product';
+import { Link } from 'react-router-dom';
 
 const ShopPage = () => {
+  const [products, setProducts] = useState([]);
+  const [productsPerPage, setProductsPerPage] = useState(16);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
+  // hàm để chia mảng thành các chunk
+  // không sử dụng trong trường hợp này, nhưng có thể hữu ích nếu cần chia nhỏ
+  const splitArrayIntoChunks = (array, chunkSize) => {
+    const result = [];
+    for (let i = 0; i < array.length; i += chunkSize) {
+      result.push(array.slice(i, i + chunkSize));
+    }
+    return result;
+  };
+
+  const [sortOrder, setSortOrder] = useState('default');
+
+  const handleSortChange = (order) => {
+    setSortOrder(order);
+    setCurrentPage(1); // Reset to first page on sort change
+  };
+
+  const fetchProducts = async () => {
+    try {
+      let sortParam = '';
+      if (sortOrder === 'price-asc') {
+        sortParam = '&sort=price-asc';
+      } else if (sortOrder === 'price-desc') {
+        sortParam = '&sort=price-desc';
+      }
+      const response = await getProducts(`?page=${currentPage}&limit=${productsPerPage}${sortParam}`);
+      console.log('Fetched products:', response.data);
+      const { products, totalPages } = response.data.data;
+      setProducts(products);
+      setTotalPages(totalPages);
+    } catch (error) {
+      console.error('Failed to fetch products:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchProducts();
+  }, [productsPerPage, currentPage]);
+
+
+  const renderPrice = (product) => {
+    // Since sample data does not show price fields, return null or handle if price fields exist
+    const currentPrice = Number(product.currentPrice);
+    const originalPrice = Number(product.originalPrice);
+    if (!isNaN(originalPrice) && originalPrice > currentPrice) {
+      return (
+        <div className="product-price">
+          <span className="current-price">Rp {currentPrice.toLocaleString()}</span>
+          <span className="original-price">Rp {originalPrice.toLocaleString()}</span>
+        </div>
+      );
+    }
+    if (!isNaN(currentPrice)) {
+      return (
+        <div className="product-price">
+          <span className="current-price">Rp {currentPrice.toLocaleString()}</span>
+        </div>
+      );
+    }
+    return null;
+  };
   return (
     <>
   <div className="hero-section">
@@ -67,12 +135,12 @@ const ShopPage = () => {
           </svg>
         </span>
       </button>
-      <span className="results-count">Showing 1-16 of 32 results</span>
     </div>
     <div className="filter-bar__right">
       <div className="dropdown">
         <label htmlFor="show">Show</label>
-        <select id="show">
+        <select id="show" value={productsPerPage} onChange={(e) => setProductsPerPage(Number(e.target.value))}>
+          <option value={12}>Mặc Định</option>
           <option value={16}>16</option>
           <option value={32}>32</option>
           <option value={48}>48</option>
@@ -80,496 +148,85 @@ const ShopPage = () => {
       </div>
       <div className="dropdown">
         <label htmlFor="sort">Short by</label>
-        <select id="sort">
-          <option value="default">Default</option>
-          <option value="price-low">Price: Low to High</option>
-          <option value="price-high">Price: High to Low</option>
+        <select
+          id="sort"
+          value={sortOrder}
+          onChange={(e) => handleSortChange(e.target.value)}
+        >
+          <option value="default">Mặc Định</option>
+          <option value="price-asc">Giá: Thấp đến Cao</option>
+          <option value="price-desc">Giá: Cao đến Thấp</option>
         </select>
       </div>
     </div>
   </div>
   <div className="container-product">
     <div className="products-grid">
-      {/* Product 1 */}
-      <div className="product-card">
-        <div className="product-tag tag-discount">-30%</div>
-        <div className="product-image">
-          <img src="./src/assets/img/sp1.png" alt="Syltherine" />
-        </div>
-        <div className="product-info">
-          <h3 className="product-name">Syltherine</h3>
-          <p className="product-description">Stylish cafe chair</p>
-          <div className="product-price">
-            <span className="current-price">Rp 2.500.000</span>
-            <span className="original-price">Rp 3.500.000</span>
-          </div>
-        </div>
-        {/* Hover Overlay */}
-        <div className="hover-overlay">
-          <button className="add-to-cart">Add to cart</button>
-          <div className="action-buttons">
-            <button className="action-button">
-              <i className="fas fa-share-alt" /> Share
-            </button>
-            <button className="action-button">
-              <i className="fas fa-exchange-alt" /> Compare
-            </button>
-            <button className="action-button">
-              <i className="far fa-heart" /> Like
-            </button>
-          </div>
-        </div>
-      </div>
-      {/* Product 2 */}
-      <div className="product-card">
-        <div className="product-image">
-          <img src="./src/assets/img/sp2.png" alt="Leviosa" />
-        </div>
-        <div className="product-info">
-          <h3 className="product-name">Leviosa</h3>
-          <p className="product-description">Stylish cafe chair</p>
-          <div className="product-price">
-            <span className="current-price">Rp 2.500.000</span>
-          </div>
-        </div>
-        {/* Hover Overlay */}
-        <div className="hover-overlay">
-          <button className="add-to-cart">Add to cart</button>
-          <div className="action-buttons">
-            <button className="action-button">
-              <i className="fas fa-share-alt" /> Share
-            </button>
-            <button className="action-button">
-              <i className="fas fa-exchange-alt" /> Compare
-            </button>
-            <button className="action-button">
-              <i className="far fa-heart" /> Like
-            </button>
-          </div>
-        </div>
-      </div>
-      {/* Product 3 */}
-      <div className="product-card">
-        <div className="product-tag tag-discount">-50%</div>
-        <div className="product-image">
-          <img src="./src/assets/img/sp3.png" alt="Lolito" />
-        </div>
-        <div className="product-info">
-          <h3 className="product-name">Lolito</h3>
-          <p className="product-description">Luxury big sofa</p>
-          <div className="product-price">
-            <span className="current-price">Rp 7.000.000</span>
-            <span className="original-price">Rp 14.000.000</span>
-          </div>
-        </div>
-        {/* Hover Overlay */}
-        <div className="hover-overlay">
-          <button className="add-to-cart">Add to cart</button>
-          <div className="action-buttons">
-            <button className="action-button">
-              <i className="fas fa-share-alt" /> Share
-            </button>
-            <button className="action-button">
-              <i className="fas fa-exchange-alt" /> Compare
-            </button>
-            <button className="action-button">
-              <i className="far fa-heart" /> Like
-            </button>
-          </div>
-        </div>
-      </div>
-      {/* Product 4 */}
-      <div className="product-card">
-        <div className="product-tag tag-new">New</div>
-        <div className="product-image">
-          <img src="./src/assets/img/sp4.png" alt="Respira" />
-        </div>
-        <div className="product-info">
-          <h3 className="product-name">Respira</h3>
-          <p className="product-description">Outdoor bar table and stool</p>
-          <div className="product-price">
-            <span className="current-price">Rp 500.000</span>
-          </div>
-        </div>
-        {/* Hover Overlay */}
-        <div className="hover-overlay">
-          <button className="add-to-cart">Add to cart</button>
-          <div className="action-buttons">
-            <button className="action-button">
-              <i className="fas fa-share-alt" /> Share
-            </button>
-            <button className="action-button">
-              <i className="fas fa-exchange-alt" /> Compare
-            </button>
-            <button className="action-button">
-              <i className="far fa-heart" /> Like
-            </button>
-          </div>
-        </div>
-      </div>
-      {/* Product 1 */}
-      <div className="product-card">
-        <div className="product-tag tag-discount">-30%</div>
-        <div className="product-image">
-          <img src="./src/assets/img/sp1.png" alt="Syltherine" />
-        </div>
-        <div className="product-info">
-          <h3 className="product-name">Syltherine</h3>
-          <p className="product-description">Stylish cafe chair</p>
-          <div className="product-price">
-            <span className="current-price">Rp 2.500.000</span>
-            <span className="original-price">Rp 3.500.000</span>
-          </div>
-        </div>
-        {/* Hover Overlay */}
-        <div className="hover-overlay">
-          <button className="add-to-cart">Add to cart</button>
-          <div className="action-buttons">
-            <button className="action-button">
-              <i className="fas fa-share-alt" /> Share
-            </button>
-            <button className="action-button">
-              <i className="fas fa-exchange-alt" /> Compare
-            </button>
-            <button className="action-button">
-              <i className="far fa-heart" /> Like
-            </button>
-          </div>
-        </div>
-      </div>
-      {/* Product 2 */}
-      <div className="product-card">
-        <div className="product-image">
-          <img src="./src/assets/img/sp2.png" alt="Leviosa" />
-        </div>
-        <div className="product-info">
-          <h3 className="product-name">Leviosa</h3>
-          <p className="product-description">Stylish cafe chair</p>
-          <div className="product-price">
-            <span className="current-price">Rp 2.500.000</span>
-          </div>
-        </div>
-        {/* Hover Overlay */}
-        <div className="hover-overlay">
-          <button className="add-to-cart">Add to cart</button>
-          <div className="action-buttons">
-            <button className="action-button">
-              <i className="fas fa-share-alt" /> Share
-            </button>
-            <button className="action-button">
-              <i className="fas fa-exchange-alt" /> Compare
-            </button>
-            <button className="action-button">
-              <i className="far fa-heart" /> Like
-            </button>
-          </div>
-        </div>
-      </div>
-      {/* Product 3 */}
-      <div className="product-card">
-        <div className="product-tag tag-discount">-50%</div>
-        <div className="product-image">
-          <img src="./src/assets/img/sp3.png" alt="Lolito" />
-        </div>
-        <div className="product-info">
-          <h3 className="product-name">Lolito</h3>
-          <p className="product-description">Luxury big sofa</p>
-          <div className="product-price">
-            <span className="current-price">Rp 7.000.000</span>
-            <span className="original-price">Rp 14.000.000</span>
-          </div>
-        </div>
-        {/* Hover Overlay */}
-        <div className="hover-overlay">
-          <button className="add-to-cart">Add to cart</button>
-          <div className="action-buttons">
-            <button className="action-button">
-              <i className="fas fa-share-alt" /> Share
-            </button>
-            <button className="action-button">
-              <i className="fas fa-exchange-alt" /> Compare
-            </button>
-            <button className="action-button">
-              <i className="far fa-heart" /> Like
-            </button>
-          </div>
-        </div>
-      </div>
-      {/* Product 4 */}
-      <div className="product-card">
-        <div className="product-tag tag-new">New</div>
-        <div className="product-image">
-          <img src="./src/assets/img/sp4.png" alt="Respira" />
-        </div>
-        <div className="product-info">
-          <h3 className="product-name">Respira</h3>
-          <p className="product-description">Outdoor bar table and stool</p>
-          <div className="product-price">
-            <span className="current-price">Rp 500.000</span>
-          </div>
-        </div>
-        {/* Hover Overlay */}
-        <div className="hover-overlay">
-          <button className="add-to-cart">Add to cart</button>
-          <div className="action-buttons">
-            <button className="action-button">
-              <i className="fas fa-share-alt" /> Share
-            </button>
-            <button className="action-button">
-              <i className="fas fa-exchange-alt" /> Compare
-            </button>
-            <button className="action-button">
-              <i className="far fa-heart" /> Like
-            </button>
-          </div>
-        </div>
-      </div>
-      {/* Product 1 */}
-      <div className="product-card">
-        <div className="product-tag tag-discount">-30%</div>
-        <div className="product-image">
-          <img src="./src/assets/img/sp1.png" alt="Syltherine" />
-        </div>
-        <div className="product-info">
-          <h3 className="product-name">Syltherine</h3>
-          <p className="product-description">Stylish cafe chair</p>
-          <div className="product-price">
-            <span className="current-price">Rp 2.500.000</span>
-            <span className="original-price">Rp 3.500.000</span>
-          </div>
-        </div>
-        {/* Hover Overlay */}
-        <div className="hover-overlay">
-          <button className="add-to-cart">Add to cart</button>
-          <div className="action-buttons">
-            <button className="action-button">
-              <i className="fas fa-share-alt" /> Share
-            </button>
-            <button className="action-button">
-              <i className="fas fa-exchange-alt" /> Compare
-            </button>
-            <button className="action-button">
-              <i className="far fa-heart" /> Like
-            </button>
-          </div>
-        </div>
-      </div>
-      {/* Product 2 */}
-      <div className="product-card">
-        <div className="product-image">
-          <img src="./src/assets/img/sp2.png" alt="Leviosa" />
-        </div>
-        <div className="product-info">
-          <h3 className="product-name">Leviosa</h3>
-          <p className="product-description">Stylish cafe chair</p>
-          <div className="product-price">
-            <span className="current-price">Rp 2.500.000</span>
-          </div>
-        </div>
-        {/* Hover Overlay */}
-        <div className="hover-overlay">
-          <button className="add-to-cart">Add to cart</button>
-          <div className="action-buttons">
-            <button className="action-button">
-              <i className="fas fa-share-alt" /> Share
-            </button>
-            <button className="action-button">
-              <i className="fas fa-exchange-alt" /> Compare
-            </button>
-            <button className="action-button">
-              <i className="far fa-heart" /> Like
-            </button>
-          </div>
-        </div>
-      </div>
-      {/* Product 3 */}
-      <div className="product-card">
-        <div className="product-tag tag-discount">-50%</div>
-        <div className="product-image">
-          <img src="./src/assets/img/sp3.png" alt="Lolito" />
-        </div>
-        <div className="product-info">
-          <h3 className="product-name">Lolito</h3>
-          <p className="product-description">Luxury big sofa</p>
-          <div className="product-price">
-            <span className="current-price">Rp 7.000.000</span>
-            <span className="original-price">Rp 14.000.000</span>
-          </div>
-        </div>
-        {/* Hover Overlay */}
-        <div className="hover-overlay">
-          <button className="add-to-cart">Add to cart</button>
-          <div className="action-buttons">
-            <button className="action-button">
-              <i className="fas fa-share-alt" /> Share
-            </button>
-            <button className="action-button">
-              <i className="fas fa-exchange-alt" /> Compare
-            </button>
-            <button className="action-button">
-              <i className="far fa-heart" /> Like
-            </button>
-          </div>
-        </div>
-      </div>
-      {/* Product 4 */}
-      <div className="product-card">
-        <div className="product-tag tag-new">New</div>
-        <div className="product-image">
-          <img src="./src/assets/img/sp4.png" alt="Respira" />
-        </div>
-        <div className="product-info">
-          <h3 className="product-name">Respira</h3>
-          <p className="product-description">Outdoor bar table and stool</p>
-          <div className="product-price">
-            <span className="current-price">Rp 500.000</span>
-          </div>
-        </div>
-        {/* Hover Overlay */}
-        <div className="hover-overlay">
-          <button className="add-to-cart">Add to cart</button>
-          <div className="action-buttons">
-            <button className="action-button">
-              <i className="fas fa-share-alt" /> Share
-            </button>
-            <button className="action-button">
-              <i className="fas fa-exchange-alt" /> Compare
-            </button>
-            <button className="action-button">
-              <i className="far fa-heart" /> Like
-            </button>
-          </div>
-        </div>
-      </div>
-      {/* Product 1 */}
-      <div className="product-card">
-        <div className="product-tag tag-discount">-30%</div>
-        <div className="product-image">
-          <img src="./src/assets/img/sp1.png" alt="Syltherine" />
-        </div>
-        <div className="product-info">
-          <h3 className="product-name">Syltherine</h3>
-          <p className="product-description">Stylish cafe chair</p>
-          <div className="product-price">
-            <span className="current-price">Rp 2.500.000</span>
-            <span className="original-price">Rp 3.500.000</span>
-          </div>
-        </div>
-        {/* Hover Overlay */}
-        <div className="hover-overlay">
-          <button className="add-to-cart">Add to cart</button>
-          <div className="action-buttons">
-            <button className="action-button">
-              <i className="fas fa-share-alt" /> Share
-            </button>
-            <button className="action-button">
-              <i className="fas fa-exchange-alt" /> Compare
-            </button>
-            <button className="action-button">
-              <i className="far fa-heart" /> Like
-            </button>
-          </div>
-        </div>
-      </div>
-      {/* Product 2 */}
-      <div className="product-card">
-        <div className="product-image">
-          <img src="./src/assets/img/sp2.png" alt="Leviosa" />
-        </div>
-        <div className="product-info">
-          <h3 className="product-name">Leviosa</h3>
-          <p className="product-description">Stylish cafe chair</p>
-          <div className="product-price">
-            <span className="current-price">Rp 2.500.000</span>
-          </div>
-        </div>
-        {/* Hover Overlay */}
-        <div className="hover-overlay">
-          <button className="add-to-cart">Add to cart</button>
-          <div className="action-buttons">
-            <button className="action-button">
-              <i className="fas fa-share-alt" /> Share
-            </button>
-            <button className="action-button">
-              <i className="fas fa-exchange-alt" /> Compare
-            </button>
-            <button className="action-button">
-              <i className="far fa-heart" /> Like
-            </button>
-          </div>
-        </div>
-      </div>
-      {/* Product 3 */}
-      <div className="product-card">
-        <div className="product-tag tag-discount">-50%</div>
-        <div className="product-image">
-          <img src="./src/assets/img/sp3.png" alt="Lolito" />
-        </div>
-        <div className="product-info">
-          <h3 className="product-name">Lolito</h3>
-          <p className="product-description">Luxury big sofa</p>
-          <div className="product-price">
-            <span className="current-price">Rp 7.000.000</span>
-            <span className="original-price">Rp 14.000.000</span>
-          </div>
-        </div>
-        {/* Hover Overlay */}
-        <div className="hover-overlay">
-          <button className="add-to-cart">Add to cart</button>
-          <div className="action-buttons">
-            <button className="action-button">
-              <i className="fas fa-share-alt" /> Share
-            </button>
-            <button className="action-button">
-              <i className="fas fa-exchange-alt" /> Compare
-            </button>
-            <button className="action-button">
-              <i className="far fa-heart" /> Like
-            </button>
-          </div>
-        </div>
-      </div>
-      {/* Product 4 */}
-      <div className="product-card">
-        <div className="product-tag tag-new">New</div>
-        <div className="product-image">
-          <img src="./src/assets/img/sp4.png" alt="Respira" />
-        </div>
-        <div className="product-info">
-          <h3 className="product-name">Respira</h3>
-          <p className="product-description">Outdoor bar table and stool</p>
-          <div className="product-price">
-            <span className="current-price">Rp 500.000</span>
-          </div>
-        </div>
-        {/* Hover Overlay */}
-        <div className="hover-overlay">
-          <button className="add-to-cart">Add to cart</button>
-          <div className="action-buttons">
-            <button className="action-button">
-              <i className="fas fa-share-alt" /> Share
-            </button>
-            <button className="action-button">
-              <i className="fas fa-exchange-alt" /> Compare
-            </button>
-            <button className="action-button">
-              <i className="far fa-heart" /> Like
-            </button>
-          </div>
-        </div>
-      </div>
+        {products && products.length > 0 ? (
+              products.map((product) => (
+                <div className="product-card" key={product._id}>
+                  {product.discount && (
+                    <div className={`product-tag ${product.discount > 0 ? 'tag-discount' : 'tag-new'}`}>
+                      {product.discount > 0 ? `-${product.discount}%` : 'New'}
+                    </div>
+                  )}
+                  <div className="product-image">
+                    <img src={product.thumbnail} alt={product.title} />
+                  </div>
+                  <div className="product-info">
+                    <h3 className="product-name">{product.title}</h3>
+                    <p className="product-description">{product.shortDescription ? product.shortDescription.slice(0, 40) + '...' : product.description.slice(0, 40) + '...'}</p>
+                    {renderPrice(product)}
+                  </div>
+                  <div className="hover-overlay">
+                    <button className="add-to-cart">
+                      <Link to={`/productdetail/${product._id}`}>Chi tiết</Link>
+                    </button>
+                    <div className="action-buttons">
+                      <button className="action-button">
+                        <i className="fas fa-share-alt" /> Chia sẻ
+                      </button>
+                      <button className="action-button">
+                        <i className="fas fa-exchange-alt" /> So sánh
+                      </button>
+                      <button className="action-button">
+                        <i className="far fa-heart" /> Yêu thích
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p>No products available.</p>
+            )}
     </div>
     <div className="pagination">
-      <a href="#" className="page active">
-        1
-      </a>
-      <a href="#" className="page">
-        2
-      </a>
-      <a href="#" className="page">
-        3
-      </a>
-      <a href="#" className="next">
+      {Array.from({ length: totalPages }, (_, index) => {
+        const pageNum = index + 1;
+        return (
+          <a
+            href="#"
+            key={pageNum}
+            className={`page ${currentPage === pageNum ? 'active' : ''}`}
+            onClick={(e) => {
+              e.preventDefault();
+              setCurrentPage(pageNum);
+            }}
+          >
+            {pageNum}
+          </a>
+        );
+      })}
+      <a
+        href="#"
+        className={`next ${currentPage === totalPages ? 'disabled' : ''}`}
+        onClick={(e) => {
+          e.preventDefault();
+          if (currentPage < totalPages) {
+            setCurrentPage(currentPage + 1);
+          }
+        }}
+      >
         Next
       </a>
     </div>

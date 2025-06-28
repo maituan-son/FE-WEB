@@ -5,7 +5,7 @@ import CheckoutPage from '../page/client/CheckoutPage';
 import ComparisonPage from '../page/client/ComparisonPage';
 import ContactPage from '../page/client/ContactPage';
 import ProductDatail from '../page/client/ProductDatail';
-import ShopPage from '../page/client/Shoppage';
+import ShopPage from '../page/client/ShopPage';
 import HomePage from '../page/client/HomePage';
 
 const clienRoutes = [
@@ -37,10 +37,10 @@ const clienRoutes = [
                 path: '/contact',
                 element: <ContactPage />
             },
-            {
-                path: '/productdetail',
-                element: <ProductDatail />
-            },
+{
+    path: '/productdetail/:id',
+    element: <ProductDatail />
+},
             {
                 path: '/shop',
                 element: <ShopPage/>
