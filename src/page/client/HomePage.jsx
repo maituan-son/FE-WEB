@@ -4,19 +4,24 @@ import { getProducts } from '../../api/product';
 const HomePage = () => {
   const [products, setProducts] = useState([]);
 
+  const fetchProducts = async () => {
+    try {
+      const response = await getProducts('?page=1&limit=8');
+      console.log('Fetched products:', response.data);
+      
+       const products = response.data.data.products; 
+      setProducts(products);
+     
+    } catch (error) {
+      console.error('Failed to fetch products:', error);
+    }
+  };
   useEffect(() => {
-    getProducts()
-      .then((response) => {
-    
-        
-        setProducts(response.data.data || []);
-      })
-      .catch((error) => {
-        console.error('Failed to fetch products:', error);
-      });
+    fetchProducts();  
   }, []);
 
   const renderPrice = (product) => {
+    // Since sample data does not show price fields, return null or handle if price fields exist
     const currentPrice = Number(product.currentPrice);
     const originalPrice = Number(product.originalPrice);
     if (!isNaN(originalPrice) && originalPrice > currentPrice) {
@@ -81,40 +86,43 @@ const HomePage = () => {
         <div className="container-product">
           <h1>Our Products</h1>
           <div className="products-grid">
-            {products.map((product) => (
-              <div className="product-card" key={product.id}>
-                {product.discount && (
-                  <div className={`product-tag ${product.discount > 0 ? 'tag-discount' : 'tag-new'}`}>
-                    {product.discount > 0 ? `-${product.discount}%` : 'New'}
+            {products && products.length > 0 ? (
+              products.map((product) => (
+                <div className="product-card" key={product._id}>
+                  {product.discount && (
+                    <div className={`product-tag ${product.discount > 0 ? 'tag-discount' : 'tag-new'}`}>
+                      {product.discount > 0 ? `-${product.discount}%` : 'New'}
+                    </div>
+                  )}
+                  <div className="product-image">
+                    <img src={product.thumbnail} alt={product.title} />
                   </div>
-                )}
-                <div className="product-image">
-                  <img src={product.image} alt={product.name} />
-                </div>
-                <div className="product-info">
-                  <h3 className="product-name">{product.name}</h3>
-              
-                  <p className="product-description">{product.description.slice(0, 40)}...</p>
-                  {renderPrice(product)}
-                </div>
-                <div className="hover-overlay">
-                  <button className="add-to-cart">
-                    <a href="productdetail">Add to cart</a>
-                  </button>
-                  <div className="action-buttons">
-                    <button className="action-button">
-                      <i className="fas fa-share-alt" /> Share
+                  <div className="product-info">
+                    <h3 className="product-name">{product.title}</h3>
+                    <p className="product-description">{product.shortDescription ? product.shortDescription.slice(0, 40) + '...' : product.description.slice(0, 40) + '...'}</p>
+                    {renderPrice(product)}
+                  </div>
+                  <div className="hover-overlay">
+                    <button className="add-to-cart">
+                      <a href="productdetail">Add to cart</a>
                     </button>
-                    <button className="action-button">
-                      <i className="fas fa-exchange-alt" /> Compare
-                    </button>
-                    <button className="action-button">
-                      <i className="far fa-heart" /> Like
-                    </button>
+                    <div className="action-buttons">
+                      <button className="action-button">
+                        <i className="fas fa-share-alt" /> Share
+                      </button>
+                      <button className="action-button">
+                        <i className="fas fa-exchange-alt" /> Compare
+                      </button>
+                      <button className="action-button">
+                        <i className="far fa-heart" /> Like
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))
+            ) : (
+              <p>No products available.</p>
+            )}
           </div>
           <button className="show-more">
             <a href="./shop">Show More</a>
