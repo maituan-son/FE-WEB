@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { toast } from "react-toastify";
-import { createCategory, deleteCategory, getCategories, updateCategory } from "../../../api/categoris";
+import { createCategory, deleteCategory, getCategories, updateCategory , restoreCategory ,softDeleteCategory} from "../../../api/categoris";
 import styles from './ListCategories.module.css';
 import { FiEdit2, FiTrash2, FiImage, FiEye, FiPlus } from 'react-icons/fi';
+import { Link } from 'react-router-dom';
 
 function ListCategories() {
   const [show, setShow] = useState(false);
@@ -20,7 +21,7 @@ function ListCategories() {
   const fetchCategories = async () => {
     try {
       setLoading(true);
-      const res = await getCategories();
+      const res = await getCategories(``);
       console.log('Fetched categories:', res.data);
       setCategories(res.data.data);
     } catch (error) {
@@ -98,13 +99,14 @@ function ListCategories() {
     }
   };
 
-  const handleDelete = async (id) => {
+  // Hàm xóa mềm: gọi API softDeleteCategory, backend sẽ set deletedAt: new Date()
+  const handleSoftDelete = async (id) => {
     if (window.confirm("Bạn có chắc chắn muốn xóa danh mục này?")) {
       try {
         setLoading(true);
-        await deleteCategory(id);
-        fetchCategories();
+        await softDeleteCategory(id); // API này nên đánh dấu deletedAt: new Date() ở backend
         toast.success("Xóa danh mục thành công!");
+        fetchCategories();
       } catch (error) {
         toast.error("Có lỗi xảy ra khi xóa!");
       } finally {
@@ -131,11 +133,18 @@ function ListCategories() {
           <h2 className={styles.pageTitle}>Quản lý danh mục</h2>
           <p className={styles.pageSubtitle}>Quản lý danh mục sản phẩm của cửa hàng</p>
         </div>
-        
-        <button className={styles.addButton} onClick={() => handleShow()}>
-          <FiPlus className={styles.buttonIcon} />
-          Thêm danh mục mới
-        </button>
+
+        <div className={styles.headerActions}>
+
+          <button className={styles.addButton} onClick={() => handleShow()}>
+            <FiPlus className={styles.buttonIcon} />
+            Thêm danh mục mới
+          </button>
+           <Link to="/admin/categories/trash" className={styles.trashButton}>
+            <FiTrash2 className={styles.buttonIcon} />
+            Thùng rác
+          </Link>
+        </div>
 
         {categories.length === 0 ? (
           <div className={styles.emptyState}>
@@ -205,7 +214,7 @@ function ListCategories() {
                         </button>
                         <button 
                           className={styles.deleteButton}
-                          onClick={() => handleDelete(category._id)}
+                          onClick={() => handleSoftDelete(category._id)}
                           title="Xóa"
                         >
                           <FiTrash2 />

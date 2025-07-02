@@ -4,6 +4,7 @@ import Profile from "../page/admin/Profile";
 import SetTings from "../page/admin/SetTings";
 import Listproducts from "../page/admin/Products/Listproducts";
 import ListCategoris from "../page/admin/Categories/ListCategoris";
+import TrashCategories from "../page/admin/Categories/TrashCategories";
 
 const adminRoutes = [
             {
@@ -26,6 +27,10 @@ const adminRoutes = [
             {
                 path: 'categories',
                 element: <ListCategoris />
+            },
+            {
+                path: 'categories/trash',
+                element: <TrashCategories />
             }
 
         ]
