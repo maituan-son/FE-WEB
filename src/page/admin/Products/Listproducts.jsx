@@ -18,9 +18,10 @@ const ListProducts = () => {
   const fetchProducts = async () => {
     setLoading(true)
     try {
-      const res = await getProducts()
-      console.log('res', res)
-      setProducts(res.data.data)
+      const res = await getProducts(``)
+      console.log('Fetched products:', res.data.data.products)
+
+      setProducts(res.data.data.products )
     } catch (error) {
       console.error('Error fetching products:', error)
     } finally {
@@ -30,7 +31,7 @@ const ListProducts = () => {
 
   useEffect(() => {
     fetchProducts()
-  }, [])
+  }, [page, limit])
 
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this product?')) return

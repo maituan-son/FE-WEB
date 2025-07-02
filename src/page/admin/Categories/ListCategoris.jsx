@@ -1,247 +1,336 @@
-import React, { useState, useEffect } from "react";
-import { 
-  getCategories, 
-  createCategory, 
-  deleteCategory, 
-  getCategory, 
-  restoreCategory, 
-  
-} from "../../../api/categoris";
+import { useEffect, useState } from "react";
+import { Modal, Button, Form } from "react-bootstrap";
+import { toast } from "react-toastify";
+import { createCategory, deleteCategory, getCategories, updateCategory } from "../../../api/categoris";
+import styles from './ListCategories.module.css';
+import { FiEdit2, FiTrash2, FiImage, FiEye, FiPlus } from 'react-icons/fi';
 
-const ListCategoris = () => {
+function ListCategories() {
+  const [show, setShow] = useState(false);
+  const [editId, setEditId] = useState(null);
+  const [form, setForm] = useState({ 
+    title: "", 
+    logoUrl: "", 
+    description: "", 
+    slug: "" 
+  });
   const [categories, setCategories] = useState([]);
-  const [formData, setFormData] = useState({ title: "", description: "" });
-  const [editingId, setEditingId] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState(null);
-  const [error, setError] = useState(null);
 
-  useEffect(() => {
-    fetchCategories();
-  }, []);
-
- const fetchCategories = async () => {
-  setLoading(true);
-  try {
-    const data = await getCategories();
-    console.log("Fetched categories:", data.data);
-    // Ensure categories is an array before setting state
-    if (Array.isArray(data.data.data)) {
-      setCategories(data.data.data);
-      console.log("Categories fetched successfully:", data.data.data);
-
-    } else {
-      setCategories([]);
-      console.error("Expected categories to be an array but got:", data.data);
-    }
-  } catch {
-    setError("Failed to fetch categories");
-  } finally {
-    setLoading(false);
-  }
-};
-
-  const handleInputChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!formData.title.trim()) {
-      setError("Category title is required");
-      return;
-    }
-    setLoading(true);
+  const fetchCategories = async () => {
     try {
-      if (editingId) {
-        // Update category
-        await createCategory({ id: editingId, ...formData }); // Assuming createCategory handles update if id exists
-        setMessage("Category updated successfully");
-      } else {
-        // Create new category
-        await createCategory(formData);
-        setMessage("Category created successfully");
-      }
-      setFormData({ title: "", description: "" });
-      setEditingId(null);
-      fetchCategories();
-    } catch {
-      setError("Failed to save category");
+      setLoading(true);
+      const res = await getCategories();
+      console.log('Fetched categories:', res.data);
+      setCategories(res.data.data);
+    } catch (error) {
+      console.log(error);
+      toast.error("Không thể tải danh sách danh mục!");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleEdit = async (id) => {
-    setLoading(true);
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  // Generate slug from title
+  const generateSlug = (title) => {
+    return title
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '') // Remove diacritics
+      .replace(/[đĐ]/g, 'd')
+      .replace(/[^a-z0-9 ]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .trim('-');
+  };
+
+  const handleClose = () => {
+    setShow(false);
+    setForm({ title: "", logoUrl: "", description: "", slug: "" });
+    setEditId(null);
+  };
+
+  const handleShow = (category = null) => {
+    if (category) {
+      setForm({
+        title: category.title,
+        logoUrl: category.logoUrl || "",
+        description: category.description,
+        slug: category.slug
+      });
+      setEditId(category._id);
+    } else {
+      setForm({ title: "", logoUrl: "", description: "", slug: "" });
+      setEditId(null);
+    }
+    setShow(true);
+  };
+
+  const handleTitleChange = (e) => {
+    const title = e.target.value;
+    const slug = generateSlug(title);
+    setForm({ ...form, title, slug });
+  };
+
+  const handleSubmit = async (e) => {
     try {
-      const response = await getCategory(id);
-    
+      e.preventDefault();
+      setLoading(true);
       
-      const category = response.data;
-      setFormData({ title: category.title, description: category.description });
-      setEditingId(id);
-      setError(null);
-      setMessage(null);
-    } catch {
-      setError("Failed to load category for editing");
+      if (editId) {
+        await updateCategory(editId, form);
+        toast.success("Cập nhật danh mục thành công!");
+      } else {
+        await createCategory(form);
+        toast.success("Thêm danh mục thành công!");
+      }
+      fetchCategories();
+      handleClose();
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response?.data?.message || "Có lỗi xảy ra!");
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this category?")) return;
-    setLoading(true);
-    try {
-      await deleteCategory(id);
-      setMessage("Category deleted successfully");
-      fetchCategories();
-    } catch {
-      setError("Failed to delete category");
-    } finally {
-      setLoading(false);
+    if (window.confirm("Bạn có chắc chắn muốn xóa danh mục này?")) {
+      try {
+        setLoading(true);
+        await deleteCategory(id);
+        fetchCategories();
+        toast.success("Xóa danh mục thành công!");
+      } catch (error) {
+        toast.error("Có lỗi xảy ra khi xóa!");
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
-  const handleRestore = async (id) => {
-    setLoading(true);
-    try {
-      await restoreCategory(id);
-      setMessage("Category restored successfully");
-      fetchCategories();
-    } catch {
-      setError("Failed to restore category");
-    } finally {
-      setLoading(false);
-    }
-  };
+  if (loading) {
+    return (
+      <div className={styles.pageContainer}>
+        <div className={styles.loading}>
+          <div className={styles.loadingSpinner}></div>
+          <p>Đang tải...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="container mt-4">
-      <h2>Categories Management</h2>
-
-      {message && (
-        <div className="alert alert-success" role="alert">
-          {message}
+    <div className={styles.pageContainer}>
+      <div className={styles.contentWrapper}>
+        <div className={styles.headerSection}>
+          <h2 className={styles.pageTitle}>Quản lý danh mục</h2>
+          <p className={styles.pageSubtitle}>Quản lý danh mục sản phẩm của cửa hàng</p>
         </div>
-      )}
-      {error && (
-        <div className="alert alert-danger" role="alert">
-          {error}
-        </div>
-      )}
-
-      <form onSubmit={handleSubmit} className="mb-4">
-        <div className="mb-3">
-          <label htmlFor="title" className="form-label">
-            Category Title
-          </label>
-          <input
-            type="text"
-            className="form-control"
-            id="title"
-            name="title"
-            value={formData.title}
-            onChange={handleInputChange}
-            disabled={loading}
-          />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="description" className="form-label">
-            Category Description
-          </label>
-          <input
-            type="text"
-            className="form-control"
-            id="description"
-            name="description"
-            value={formData.description}
-            onChange={handleInputChange}
-            disabled={loading}
-          />
-        </div>
-        <button type="submit" className="btn btn-primary" disabled={loading}>
-          {editingId ? "Update Category" : "Add Category"}
+        
+        <button className={styles.addButton} onClick={() => handleShow()}>
+          <FiPlus className={styles.buttonIcon} />
+          Thêm danh mục mới
         </button>
-        {editingId && (
-          <button
-            type="button"
-            className="btn btn-secondary ms-2"
-            onClick={() => {
-              setEditingId(null);
-              setFormData({ title: "", description: "" });
-              setError(null);
-              setMessage(null);
-            }}
-            disabled={loading}
-          >
-            Cancel
-          </button>
+
+        {categories.length === 0 ? (
+          <div className={styles.emptyState}>
+            <FiImage size={64} className={styles.emptyIcon} />
+            <h3>Chưa có danh mục nào</h3>
+            <p>Hãy thêm danh mục đầu tiên của bạn</p>
+          </div>
+        ) : (
+          <div className={styles.tableContainer}>
+            <table className={styles.customTable}>
+              <thead>
+                <tr>
+                  <th>STT</th>
+                  <th>Logo</th>
+                  <th>Tên danh mục</th>
+                  <th>Mô tả</th>
+                  <th>Slug</th>
+                  <th>Hành động</th>
+                </tr>
+              </thead>
+              <tbody>
+                {categories.map((category, index) => (
+                  <tr key={category._id}>
+                    <td data-label="STT">{index + 1}</td>
+                    <td data-label="Logo" className={styles.logoCell}>
+                      {category.logoUrl ? (
+                        <img 
+                          src={category.logoUrl} 
+                          alt={category.title}
+                          className={styles.categoryLogo}
+                          onError={(e) => {
+                            e.target.style.display = 'none';
+                            e.target.nextSibling.style.display = 'flex';
+                          }}
+                        />
+                      ) : (
+                        <div className={styles.noLogo}>
+                          <FiImage />
+                        </div>
+                      )}
+                      <div className={styles.noLogo} style={{display: category.logoUrl ? 'none' : 'flex'}}>
+                        <FiImage />
+                      </div>
+                    </td>
+                    <td data-label="Tên danh mục" className={styles.titleCell}>
+                      <span className={styles.categoryTitle}>{category.title}</span>
+                    </td>
+                    <td data-label="Mô tả" className={styles.descriptionCell}>
+                      <span className={styles.description} title={category.description}>
+                        {category.description.length > 50 
+                          ? `${category.description.substring(0, 50)}...` 
+                          : category.description
+                        }
+                      </span>
+                    </td>
+                    <td data-label="Slug" className={styles.slugCell}>
+                      <code className={styles.slug}>{category.slug}</code>
+                    </td>
+                    <td data-label="Hành động" className={styles.actionCell}>
+                      <div className={styles.actionButtons}>
+                        <button 
+                          className={styles.editButton}
+                          onClick={() => handleShow(category)}
+                          title="Chỉnh sửa"
+                        >
+                          <FiEdit2 />
+                        </button>
+                        <button 
+                          className={styles.deleteButton}
+                          onClick={() => handleDelete(category._id)}
+                          title="Xóa"
+                        >
+                          <FiTrash2 />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
-      </form>
 
-      {loading && <p>Loading...</p>}
+        <Modal show={show} onHide={handleClose} className={styles.customModal} size="lg">
+          <Modal.Header closeButton className={styles.modalHeader}>
+            <Modal.Title className={styles.modalTitle}>
+              {editId ? "Cập nhật" : "Thêm mới"} danh mục
+            </Modal.Title>
+          </Modal.Header>
+          <Form onSubmit={handleSubmit}>
+            <Modal.Body className={styles.modalBody}>
+              <div className={styles.formRow}>
+                <div className={styles.formGroup}>
+                  <label className={styles.formLabel}>
+                    <span>Tên danh mục</span>
+                    <span className={styles.required}>*</span>
+                  </label>
+                  <input
+                    type="text"
+                    className={styles.formInput}
+                    value={form.title}
+                    onChange={handleTitleChange}
+                    placeholder="Nhập tên danh mục..."
+                    required
+                  />
+                </div>
 
-      <table className="table table-striped">
-        <thead>
-          <tr>
-            <th>Title</th>
-            <th>Description</th>
-            <th>Slug</th>
-            <th>Status</th>
-            
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {categories.length === 0 && (
-            <tr>
-              <td colSpan="5" className="text-center">
-                No categories found.
-              </td>
-            </tr>
-          )}
-          {categories.map((category) => (
-            <tr key={category._id}>
-              <td>{category.title}</td>
-              <td>{category.description}</td>
-              <td>{category.slug}</td>
-              <td>{category.deleteAt ? "Deleted" : "Active"}</td>
-              <td>
-                {!category.deleteAt ? (
-                  <>
-                    <button
-                      className="btn btn-sm btn-warning me-2"
-                      onClick={() => handleEdit(category._id)}
-                      disabled={loading}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      className="btn btn-sm btn-danger"
-                      onClick={() => handleDelete(category._id)}
-                      disabled={loading}
-                    >
-                      Delete
-                    </button>
-                  </>
-                ) : (
-                  <button
-                    className="btn btn-sm btn-success"
-                    onClick={() => handleRestore(category._id)}
-                    disabled={loading}
-                  >
-                    Restore
-                  </button>
+                <div className={styles.formGroup}>
+                  <label className={styles.formLabel}>Slug</label>
+                  <input
+                    type="text"
+                    className={`${styles.formInput} ${styles.slugInput}`}
+                    value={form.slug}
+                    onChange={(e) => setForm({ ...form, slug: e.target.value })}
+                    placeholder="slug-tu-dong-tao"
+                    required
+                    readOnly
+                  />
+                  <small className={styles.helpText}>
+                    Slug được tạo tự động từ tên danh mục
+                  </small>
+                </div>
+              </div>
+
+              <div className={styles.formGroup}>
+                <label className={styles.formLabel}>URL Logo</label>
+                <input
+                  type="url"
+                  className={styles.formInput}
+                  value={form.logoUrl}
+                  onChange={(e) => setForm({ ...form, logoUrl: e.target.value })}
+                  placeholder="https://example.com/logo.png"
+                />
+                {form.logoUrl && (
+                  <div className={styles.imagePreview}>
+                    <img 
+                      src={form.logoUrl} 
+                      alt="Preview" 
+                      className={styles.previewImage}
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        e.target.nextSibling.style.display = 'block';
+                      }}
+                    />
+                    <div className={styles.previewError} style={{display: 'none'}}>
+                      Không thể tải ảnh
+                    </div>
+                  </div>
                 )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+              </div>
+              
+              <div className={styles.formGroup}>
+                <label className={styles.formLabel}>
+                  <span>Mô tả</span>
+                  <span className={styles.required}>*</span>
+                </label>
+                <textarea
+                  rows={4}
+                  className={styles.formTextarea}
+                  value={form.description}
+                  onChange={(e) => setForm({ ...form, description: e.target.value })}
+                  placeholder="Nhập mô tả cho danh mục..."
+                  required
+                />
+              </div>
+            </Modal.Body>
+            <Modal.Footer className={styles.modalFooter}>
+              <button 
+                type="button"
+                className={`${styles.modalButton} ${styles.secondaryButton}`}
+                onClick={handleClose}
+                disabled={loading}
+              >
+                Hủy
+              </button>
+              <button 
+                type="submit"
+                className={`${styles.modalButton} ${styles.primaryButton}`}
+                disabled={loading}
+              >
+                {loading ? (
+                  <span className={styles.loadingText}>
+                    <div className={styles.miniSpinner}></div>
+                    {editId ? "Đang cập nhật..." : "Đang thêm..."}
+                  </span>
+                ) : (
+                  editId ? "Cập nhật" : "Thêm mới"
+                )}
+              </button>
+            </Modal.Footer>
+          </Form>
+        </Modal>
+      </div>
     </div>
   );
-};
+}
 
-export default ListCategoris;
+export default ListCategories;
