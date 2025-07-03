@@ -27,9 +27,28 @@ function TrashCategories() {
 
   // Bạn sẽ implement các function này
   const fetchDeletedCategories = async () => {
-    const res = await getCategories(`?trash=true`);
-    setDeletedCategories(res.data.data);
-    setLoading(false);
+    try {
+      setLoading(true);
+      // Sửa lại cách gọi API - truyền query string đúng cách
+      const params = new URLSearchParams({
+        trash: 'true',
+        page: 1,
+        limit: 10 // Hoặc số lượng bạn muốn hiển thị
+      });
+      
+      const res = await getCategories(params.toString());
+      console.log('Deleted categories:', res.data);
+      
+      // Kiểm tra cấu trúc dữ liệu trả về
+      const deletedData = res.data?.data?.data || res.data?.data || [];
+      setDeletedCategories(deletedData);
+    } catch (error) {
+      console.error('Error fetching deleted categories:', error);
+      toast.error("Không thể tải danh sách thùng rác!");
+      setDeletedCategories([]);
+    } finally {
+      setLoading(false);
+    }
   };
 
 

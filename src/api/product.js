@@ -1,9 +1,11 @@
 import api from ".";
 
+export const getProducts = (queryString) => api.get(`/products?${queryString}`);
 export const createProduct = (data) => api.post("/products", data);
-export const getProducts = (queryString) => {
-  return api.get(`/products${queryString}`);
-};
 export const getProduct = (id) => api.get(`/products/${id}`);
-export const updateProduct = (id, data) => api.put(`/products/${id}`, data);
+export const updateProduct = (id, data) => api.patch(`/products/${id}`, data);
 export const deleteProduct = (id) => api.delete(`/products/${id}`);
+export const softDeleteProduct = (id) =>
+  api.patch(`/products/soft-delete/${id}`, { deletedAt: new Date() });
+export const restoreProduct = (id) =>
+  api.patch(`/products/restore/${id}`, { deletedAt: null });

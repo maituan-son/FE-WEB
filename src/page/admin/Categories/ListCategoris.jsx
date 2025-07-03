@@ -1,14 +1,20 @@
 import { useEffect, useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { toast } from "react-toastify";
-import { createCategory, deleteCategory, getCategories, updateCategory , restoreCategory ,softDeleteCategory} from "../../../api/categoris";
+import { createCategory, getCategories, updateCategory  ,softDeleteCategory} from "../../../api/categoris";
 import styles from './ListCategories.module.css';
 import { FiEdit2, FiTrash2, FiImage, FiEye, FiPlus } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
+  import { useCallback } from "react";
 
 function ListCategories() {
   const [show, setShow] = useState(false);
   const [editId, setEditId] = useState(null);
+  const [searchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1); // 👈 Thêm dòng này
+  const [limit] = useState(10); 
+   const [isTrash] = useState(false);
   const [form, setForm] = useState({ 
     title: "", 
     logoUrl: "", 
@@ -18,23 +24,32 @@ function ListCategories() {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const fetchCategories = async () => {
-    try {
-      setLoading(true);
-      const res = await getCategories(``);
-      console.log('Fetched categories:', res.data);
-      setCategories(res.data.data);
-    } catch (error) {
-      console.log(error);
-      toast.error("Không thể tải danh sách danh mục!");
-    } finally {
-      setLoading(false);
-    }
-  };
+
+
+const fetchCategories = useCallback(async () => {
+  try {
+    setLoading(true);
+    const res = await getCategories({
+      page: currentPage,
+      limit,
+      search: searchTerm,
+      trash: isTrash ? "true" : "false",
+    });
+
+    setCategories(res.data.data.data);
+    setTotalPages(res.data.data.pagination.totalPages); // 👈 Lưu lại totalPages
+  } catch (error) {
+    console.log(error);
+    toast.error("Không thể tải danh sách danh mục!");
+  } finally {
+    setLoading(false);
+  }
+}, [currentPage, searchTerm, isTrash]);
+
 
   useEffect(() => {
     fetchCategories();
-  }, []);
+  }, [fetchCategories]);
 
   // Generate slug from title
   const generateSlug = (title) => {
@@ -107,7 +122,7 @@ function ListCategories() {
         await softDeleteCategory(id); // API này nên đánh dấu deletedAt: new Date() ở backend
         toast.success("Xóa danh mục thành công!");
         fetchCategories();
-      } catch (error) {
+      } catch {
         toast.error("Có lỗi xảy ra khi xóa!");
       } finally {
         setLoading(false);
@@ -153,6 +168,7 @@ function ListCategories() {
             <p>Hãy thêm danh mục đầu tiên của bạn</p>
           </div>
         ) : (
+          <>
           <div className={styles.tableContainer}>
             <table className={styles.customTable}>
               <thead>
@@ -168,7 +184,7 @@ function ListCategories() {
               <tbody>
                 {categories.map((category, index) => (
                   <tr key={category._id}>
-                    <td data-label="STT">{index + 1}</td>
+                    <td data-label="STT">{index + 1 + (currentPage - 1) * limit}</td>
                     <td data-label="Logo" className={styles.logoCell}>
                       {category.logoUrl ? (
                         <img 
@@ -226,6 +242,29 @@ function ListCategories() {
               </tbody>
             </table>
           </div>
+         <div className={`${styles.pagination} ${styles.advanced}`}>
+  <button
+    onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+    disabled={currentPage === 1}
+    className={styles.pageButton}
+  >
+    ← Trang trước
+  </button>
+
+  <span className={styles.pageInfo}>
+    Trang {currentPage} / {totalPages}
+  </span>
+
+  <button
+    onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+    disabled={currentPage === totalPages}
+    className={styles.pageButton}
+  >
+    Trang sau →
+  </button>
+</div>  
+
+          </>
         )}
 
         <Modal show={show} onHide={handleClose} className={styles.customModal} size="lg">

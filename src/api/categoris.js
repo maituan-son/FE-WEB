@@ -1,8 +1,7 @@
-import { date } from "zod";
 import api from ".";
-
-export const getCategories = (queryString) =>
-  api.get(`/categories${queryString}`);
+import qs from "query-string";
+export const getCategories = (params) =>
+  api.get(`/categories?${qs.stringify(params)}`);
 export const createCategory = (data) => api.post("/categories", data);
 export const getCategory = (id) => api.get(`/categories/${id}`);
 export const updateCategory = (id, data) =>
