@@ -5,6 +5,9 @@ import SetTings from "../page/admin/SetTings";
 import Listproducts from "../page/admin/Products/Listproducts";
 import ListCategoris from "../page/admin/Categories/ListCategoris";
 import TrashCategories from "../page/admin/Categories/TrashCategories";
+import ListSubCategories from "../page/admin/subCategory/ListSubCategory";
+import TrashSubCategories from "../page/admin/subCategory/TrashSubCategory";
+
 
 const adminRoutes = [
             {
@@ -31,6 +34,13 @@ const adminRoutes = [
             {
                 path: 'categories/trash',
                 element: <TrashCategories />
+            },
+            {
+                 path: 'subcategories',
+                element: <ListSubCategories />
+            },{
+                path: 'subcategories/trash',
+                element: <TrashSubCategories />
             }
 
         ]

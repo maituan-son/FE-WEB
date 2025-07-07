@@ -673,197 +673,61 @@
   backdrop-filter: blur(10px);
 }
 
-/* Image Upload Styles */
-.imageUploadContainer {
+/* Parent Category Styles */
+.parentCell {
+  padding: 12px 8px;
+  vertical-align: middle;
+}
+
+.parentCategory {
   display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.fileInputWrapper {
-  position: relative;
-}
-
-.fileInput {
-  display: none;
-}
-
-.fileInputLabel {
-  display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
   gap: 8px;
-  padding: 32px 16px;
-  border: 2px dashed #cbd5e0;
-  border-radius: 12px;
-  background: #f7fafc;
-  color: #4a5568;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-align: center;
-  position: relative;
-}
-
-.fileInputLabel:hover {
-  border-color: #667eea;
-  background: rgba(102, 126, 234, 0.05);
-  color: #667eea;
-}
-
-/* Drag over state */
-.fileInputLabel.dragOver {
-  border-color: #667eea;
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
-  transform: scale(1.02);
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
-  color: #667eea;
-}
-
-.fileInputLabel.dragOver .uploadIcon {
-  animation: bounce 0.6s ease-in-out infinite alternate;
-  color: #667eea;
-}
-
-.uploadIcon {
-  font-size: 24px;
-  color: #667eea;
-  transition: all 0.3s ease;
-}
-
-.fileInputLabel span {
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.fileInputLabel small {
-  font-size: 12px;
-  color: #718096;
-  margin-top: 4px;
-}
-
-/* Image Preview Styles */
-.imagePreviewContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.imagePreview {
-  position: relative;
-  display: inline-block;
-  max-width: 200px;
-  align-self: flex-start;
-}
-
-.previewImage {
-  width: 100%;
-  max-width: 200px;
-  height: 150px;
-  object-fit: cover;
-  border-radius: 12px;
-  border: 2px solid #e2e8f0;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.removeImageButton {
-  position: absolute;
-  top: -8px;
-  right: -8px;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: #e53e3e;
+  padding: 6px 12px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.removeImageButton:hover {
-  background: #c53030;
-  transform: scale(1.1);
-}
-
-.fileInfo {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 12px;
-  background: #f7fafc;
   border-radius: 8px;
-  border: 1px solid #e2e8f0;
-}
-
-.fileName {
-  font-size: 14px;
-  font-weight: 600;
-  color: #2d3748;
-  margin: 0;
-  word-break: break-all;
-}
-
-.fileSize {
-  font-size: 12px;
-  color: #718096;
-  margin: 0;
-}
-
-/* Upload Progress */
-.uploadProgress {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
-  background: rgba(102, 126, 234, 0.1);
-  border-radius: 8px;
-  color: #667eea;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
+  max-width: fit-content;
 }
 
-.uploadSpinner {
-  width: 16px;
-  height: 16px;
-  border: 2px solid rgba(102, 126, 234, 0.3);
-  border-radius: 50%;
-  border-top-color: #667eea;
-  animation: spin 1s linear infinite;
+.parentIcon {
+  font-size: 14px;
+  opacity: 0.9;
 }
 
-/* Animations */
-@keyframes bounce {
-  from {
-    transform: translateY(0px);
-  }
-  to {
-    transform: translateY(-10px);
-  }
+.parentName {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;
 }
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+/* Form Select Styles */
+.formInput select,
+select.formInput {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+  padding-right: 40px;
 }
 
-/* Responsive Design */
+.formInput select:focus,
+select.formInput:focus {
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23667eea' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+}
+
+/* Responsive */
 @media (max-width: 768px) {
-  .fileInputLabel {
-    padding: 24px 12px;
+  .parentCategory {
+    font-size: 12px;
+    padding: 4px 8px;
   }
   
-  .previewImage {
-    max-width: 150px;
-    height: 120px;
-  }
-  
-  .imagePreviewContainer {
-    align-items: center;
+  .parentName {
+    max-width: 100px;
   }
 }
