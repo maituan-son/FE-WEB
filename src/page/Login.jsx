@@ -1,84 +1,84 @@
-import React, { useState } from 'react'
-import '../assets/scss/pages/_login.scss'
-import { login , register  } from '../api/login';
-import { toast } from 'react-toastify';
+import React, { useState } from "react";
+import "../assets/scss/pages/_login.scss";
+import { login, register } from "../api/login";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import useAuthStore from "../components/authStore/authStore";
 
 const Login = () => {
-  const [isSignUp, setIsSignUp] = useState(false);
   const [rightPanelActive, setRightPanelActive] = useState(false);
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+  const [registerName, setRegisterName] = useState("");
+  const [registerEmail, setRegisterEmail] = useState("");
+  const [registerPassword, setRegisterPassword] = useState("");
+  const navigate = useNavigate();
 
-  // Login form state
-  const [loginEmail, setLoginEmail] = useState('');
-  const [loginPassword, setLoginPassword] = useState('');
+  const setUserData = useAuthStore((state) => state.login); // ✅ lấy login function từ store
 
-  // Register form state
-  const [registerName, setRegisterName] = useState('');
-  const [registerEmail, setRegisterEmail] = useState('');
-  const [registerPassword, setRegisterPassword] = useState('');
+  const handleSignUpClick = () => setRightPanelActive(true);
+  const handleSignInClick = () => setRightPanelActive(false);
 
-  const handleSignUpClick = () => {
-    setRightPanelActive(true);
-  };
-
-  const handleSignInClick = () => {
-    setRightPanelActive(false);
-  };
-
-  // Login form submit handler
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     try {
       const res = await login({ email: loginEmail, password: loginPassword });
-      if (res?.isVerifyEmail === false) {
-        toast.error('Your email has not been verified. Please check your inbox.');
-      } else {
-        toast.success('Login successful!');
-        // Clear login form
-        setLoginEmail('');
-        setLoginPassword('');
-      }
+      const { token, user } = res.data || {};
+      // console.log(res.data);
+
+      // if (!user?.isVerifyEmail !== true) {
+      //   toast.error("Vui lòng xác thực email trước khi đăng nhập");
+      //   return;
+      // }
+      // console.log(user, token);
+
+      setUserData({ user, token }); // ✅ lưu vào Zustand
+      toast.success("Login successful!");
+      setLoginEmail("");
+      setLoginPassword("");
+
+      navigate("/"); // ✅ hoặc redirect phù hợp
     } catch (error) {
-      toast.error('Login failed: ' + (error.response?.data?.message || error.message));
+      toast.error(
+        "Login failed: " + (error.response?.data?.message || error.message)
+      );
     }
   };
 
-  // Register form submit handler
   const handleRegisterSubmit = async (e) => {
     e.preventDefault();
     try {
-      await register({  fullName: registerName, email: registerEmail, password: registerPassword });
-      toast.success('Registration successful! Please log in.');
+      await register({
+        fullName: registerName,
+        email: registerEmail,
+        password: registerPassword,
+      });
+      toast.success("Đăng ký thành công! Vui lòng đăng nhập.");
       setRightPanelActive(false);
-      // Clear register form
-      setRegisterName('');
-      setRegisterEmail('');
-      setRegisterPassword('');
+      setRegisterName("");
+      setRegisterEmail("");
+      setRegisterPassword("");
     } catch (error) {
-      toast.error('Registration failed: ' + (error.response?.data?.message || error.message));
+      toast.error(
+        "Registration failed: " +
+          (error.response?.data?.message || error.message)
+      );
     }
   };
 
   return (
     <div className="login-page">
-      <div className={`container${rightPanelActive ? ' right-panel-active' : ''}`} id="container">
+      <div
+        className={`container${rightPanelActive ? " right-panel-active" : ""}`}
+        id="container"
+      >
+        {/* Register */}
         <div className="form-container sign-up-container">
           <form onSubmit={handleRegisterSubmit}>
             <h1>Create Account</h1>
-            <div className="social-container">
-              <a href="#" className="social">
-                <i className="fab fa-facebook-f" />
-              </a>
-              <a href="#" className="social">
-                <i className="fab fa-google-plus-g" />
-              </a>
-              <a href="#" className="social">
-                <i className="fab fa-linkedin-in" />
-              </a>
-            </div>
-            <span>or use your email for registration</span>
             <input
               type="text"
-              placeholder="fullName"
+              placeholder="Full Name"
               value={registerName}
               onChange={(e) => setRegisterName(e.target.value)}
               required
@@ -100,21 +100,11 @@ const Login = () => {
             <button type="submit">Sign Up</button>
           </form>
         </div>
+
+        {/* Login */}
         <div className="form-container sign-in-container">
           <form onSubmit={handleLoginSubmit}>
             <h1>Sign in</h1>
-            <div className="social-container">
-              <a href="#" className="social">
-                <i className="fab fa-facebook-f" />
-              </a>
-              <a href="#" className="social">
-                <i className="fab fa-google-plus-g" />
-              </a>
-              <a href="#" className="social">
-                <i className="fab fa-linkedin-in" />
-              </a>
-            </div>
-            <span>or use your account</span>
             <input
               type="email"
               placeholder="Email"
@@ -133,19 +123,23 @@ const Login = () => {
             <button type="submit">Sign In</button>
           </form>
         </div>
+
+        {/* Overlay */}
         <div className="overlay-container">
           <div className="overlay">
             <div className="overlay-panel overlay-left">
               <h1>Welcome Back!</h1>
-              <p>To keep connected with us please login with your personal info</p>
-              <button className="ghost" id="signIn" onClick={handleSignInClick}>
+              <p>
+                To keep connected with us please login with your personal info
+              </p>
+              <button className="ghost" onClick={handleSignInClick}>
                 Sign In
               </button>
             </div>
             <div className="overlay-panel overlay-right">
               <h1>Hello, Friend!</h1>
               <p>Enter your personal details and start journey with us</p>
-              <button className="ghost" id="signUp" onClick={handleSignUpClick}>
+              <button className="ghost" onClick={handleSignUpClick}>
                 Sign Up
               </button>
             </div>
@@ -153,7 +147,7 @@ const Login = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;

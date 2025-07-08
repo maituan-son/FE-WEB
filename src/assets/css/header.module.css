@@ -1,15 +1,9 @@
-// header {
-// 	background-color: #333;
-// 	min-height: 100px;
-// 	padding: 2.5rem 3.25em;
-// 	color: #fff;
-// 	text-align: center;
-// }
 
-@import url('<link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Mulish:ital,wght@0,200..1000;1,200..1000&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">');
+
+@import url('<link href="https:fonts.googleapis.com/css2?family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Mulish:ital,wght@0,200..1000;1,200..1000&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">');
 
 #headerWebComponent {
-	// border: 1px solid red;
+	 border: 1px solid red;
 	background: #fff;
 	padding: 0 3.25rem;
 	min-height: 100px;
@@ -73,7 +67,7 @@
 	gap: 2.75rem;
 
 	& img {
-		// border: 1px solid red !important;
+		 border: 1px solid red !important;
 		width: 28px;
 		height: 28px;
 		padding: 0;
@@ -87,7 +81,7 @@
 }
 
 #mobileNavigationComponent {
-	display: none !important; //
+	display: none !important; 
 	box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
 	background-color: var(--mainBackgroudColor);
 	height: max-content;
@@ -98,7 +92,7 @@
 	top: 100%;
 	right: 1%;
 	z-index: 20;
-	// transform: translateX(50%);
+	 transform: translateX(50%);
 
 }
 
@@ -121,11 +115,11 @@
 }
 
 #menuToggle:hover #mobileNavigationComponent {
-	display: flex !important; //
+	display: flex !important; 
 }
 
 #headerMobileComponent {
-	// border: 1px solid red;
+	 border: 1px solid red;
 	display: none;
 	min-height: 100px;
 	flex-direction: row-reverse;
@@ -170,7 +164,7 @@
 	}
 
 	#headerMobileComponent .header-nav-actions {
-		// border: 1px solid blue !important;
+		 border: 1px solid blue !important;
 		box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
 		position: fixed !important;
 		display: flex !important;
@@ -182,7 +176,7 @@
 		background: #fff;
 		margin: 0;
 		z-index: 1;
-		// transform: none;
+		 transform: none;
 	}
 
 }

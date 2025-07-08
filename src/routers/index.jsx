@@ -1,36 +1,44 @@
-import { createBrowserRouter } from 'react-router-dom';
-import clienRoutes from './clienRoutes';
-import adminRoutes from './adminRoutes';
-import LayoutAdmin from '../components/Layout/LayoutAdmin';
-import LayoutClient from '../components/Layout/LayoutClien';
+import { createBrowserRouter } from "react-router-dom";
+import clienRoutes from "./clienRoutes";
 
-import Login from '../page/Login';
+import LayoutAdmin from "../components/Layout/LayoutAdmin";
+import LayoutClient from "../components/Layout/LayoutClien";
 
-import NotFound from '../components/NotFound';
+import Login from "../page/Login";
+
+import NotFound from "../components/NotFound";
+import AdminRoute from "./adminRole";
+import adminRoutes from "./adminRoutes";
+import AdminRole from "./adminRole";
 
 const routerApp = createBrowserRouter([
-    //layout Clien
-    {
-        path: '/',
-        element: <LayoutClient  />,
-        children: clienRoutes
-    },
-    //layout Admin
-    {
-        path: '/admin',
-        element: <LayoutAdmin />,
-        children: adminRoutes
-    },
-    //layout Empty
-    {
-        path: '/login',
-        element: <Login />
-
-    },
-    {
-        path: '*',
-        element: <NotFound />
-    }
+  //layout Clien
+  {
+    path: "/",
+    element: <LayoutClient />,
+    children: clienRoutes,
+  },
+  //layout Admin
+  {
+    path: "/admin",
+    element: <AdminRole />,
+    children: [
+      {
+        path: "",
+        element: <LayoutAdmin />, // layout của admin
+        children: adminRoutes,
+      },
+    ],
+  },
+  //layout Empty
+  {
+    path: "/login",
+    element: <Login />,
+  },
+  {
+    path: "*",
+    element: <NotFound />,
+  },
 ]);
 
 export default routerApp;

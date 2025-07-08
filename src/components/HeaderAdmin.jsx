@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "@emotion/styled";
+import useAuthStore from "./authStore/authStore";
 import {
   FiSearch,
   FiBell,
@@ -13,22 +14,20 @@ import {
 } from "react-icons/fi";
 
 const HeaderWrapper = styled.header`
-  background: ${(props) => 
-    props.darkMode 
+  background: ${(props) =>
+    props.darkMode
       ? "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)"
-      : "linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #e2e8f0 100%)"
-  };
+      : "linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #e2e8f0 100%)"};
   backdrop-filter: blur(20px);
-  border-bottom: 1px solid ${(props) => 
-    props.darkMode ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.1)"
-  };
+  border-bottom: 1px solid
+    ${(props) =>
+      props.darkMode ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.1)"};
   padding: 16px 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  box-shadow: 0 4px 20px ${(props) => 
-    props.darkMode ? "rgba(0, 0, 0, 0.3)" : "rgba(0, 0, 0, 0.1)"
-  };
+  box-shadow: 0 4px 20px
+    ${(props) => (props.darkMode ? "rgba(0, 0, 0, 0.3)" : "rgba(0, 0, 0, 0.1)")};
   transition: all 0.3s ease;
   position: sticky;
   top: 0;
@@ -56,9 +55,8 @@ const MenuButton = styled.button`
   justify-content: center;
 
   &:hover {
-    background: ${(props) => 
-      props.darkMode ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.05)"
-    };
+    background: ${(props) =>
+      props.darkMode ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.05)"};
     transform: scale(1.05);
   }
 
@@ -76,13 +74,12 @@ const SearchContainer = styled.div`
 const SearchInput = styled.input`
   width: 100%;
   padding: 12px 16px 12px 48px;
-  border: 2px solid ${(props) => 
-    props.darkMode ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.1)"
-  };
+  border: 2px solid
+    ${(props) =>
+      props.darkMode ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.1)"};
   border-radius: 12px;
-  background: ${(props) => 
-    props.darkMode ? "rgba(255, 255, 255, 0.05)" : "rgba(255, 255, 255, 0.8)"
-  };
+  background: ${(props) =>
+    props.darkMode ? "rgba(255, 255, 255, 0.05)" : "rgba(255, 255, 255, 0.8)"};
   color: ${(props) => (props.darkMode ? "#fff" : "#374151")};
   font-size: 14px;
   outline: none;
@@ -90,21 +87,19 @@ const SearchInput = styled.input`
   backdrop-filter: blur(10px);
 
   &::placeholder {
-    color: ${(props) => 
-      props.darkMode ? "rgba(255, 255, 255, 0.5)" : "rgba(0, 0, 0, 0.5)"
-    };
+    color: ${(props) =>
+      props.darkMode ? "rgba(255, 255, 255, 0.5)" : "rgba(0, 0, 0, 0.5)"};
   }
 
   &:focus {
-    border-color: ${(props) => 
-      props.darkMode ? "#667eea" : "#3b82f6"
-    };
-    box-shadow: 0 0 0 3px ${(props) => 
-      props.darkMode ? "rgba(102, 126, 234, 0.3)" : "rgba(59, 130, 246, 0.3)"
-    };
-    background: ${(props) => 
-      props.darkMode ? "rgba(255, 255, 255, 0.1)" : "#ffffff"
-    };
+    border-color: ${(props) => (props.darkMode ? "#667eea" : "#3b82f6")};
+    box-shadow: 0 0 0 3px
+      ${(props) =>
+        props.darkMode
+          ? "rgba(102, 126, 234, 0.3)"
+          : "rgba(59, 130, 246, 0.3)"};
+    background: ${(props) =>
+      props.darkMode ? "rgba(255, 255, 255, 0.1)" : "#ffffff"};
   }
 `;
 
@@ -113,9 +108,8 @@ const SearchIcon = styled.div`
   left: 16px;
   top: 50%;
   transform: translateY(-50%);
-  color: ${(props) => 
-    props.darkMode ? "rgba(255, 255, 255, 0.5)" : "rgba(0, 0, 0, 0.5)"
-  };
+  color: ${(props) =>
+    props.darkMode ? "rgba(255, 255, 255, 0.5)" : "rgba(0, 0, 0, 0.5)"};
   font-size: 18px;
 `;
 
@@ -140,13 +134,12 @@ const IconButton = styled.button`
   justify-content: center;
 
   &:hover {
-    background: ${(props) => 
-      props.darkMode ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.05)"
-    };
+    background: ${(props) =>
+      props.darkMode ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.05)"};
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px ${(props) => 
-      props.darkMode ? "rgba(0, 0, 0, 0.3)" : "rgba(0, 0, 0, 0.1)"
-    };
+    box-shadow: 0 4px 12px
+      ${(props) =>
+        props.darkMode ? "rgba(0, 0, 0, 0.3)" : "rgba(0, 0, 0, 0.1)"};
   }
 `;
 
@@ -175,14 +168,13 @@ const UserSection = styled.div`
 `;
 
 const UserButton = styled.button`
-  background: ${(props) => 
-    props.darkMode 
+  background: ${(props) =>
+    props.darkMode
       ? "linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05))"
-      : "linear-gradient(135deg, #ffffff, #f8fafc)"
-  };
-  border: 1px solid ${(props) => 
-    props.darkMode ? "rgba(255, 255, 255, 0.2)" : "rgba(0, 0, 0, 0.1)"
-  };
+      : "linear-gradient(135deg, #ffffff, #f8fafc)"};
+  border: 1px solid
+    ${(props) =>
+      props.darkMode ? "rgba(255, 255, 255, 0.2)" : "rgba(0, 0, 0, 0.1)"};
   padding: 8px 16px;
   border-radius: 12px;
   display: flex;
@@ -195,14 +187,13 @@ const UserButton = styled.button`
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px ${(props) => 
-      props.darkMode ? "rgba(0, 0, 0, 0.3)" : "rgba(0, 0, 0, 0.1)"
-    };
-    background: ${(props) => 
-      props.darkMode 
+    box-shadow: 0 8px 25px
+      ${(props) =>
+        props.darkMode ? "rgba(0, 0, 0, 0.3)" : "rgba(0, 0, 0, 0.1)"};
+    background: ${(props) =>
+      props.darkMode
         ? "linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.1))"
-        : "linear-gradient(135deg, #f8fafc, #e2e8f0)"
-    };
+        : "linear-gradient(135deg, #f8fafc, #e2e8f0)"};
   }
 `;
 
@@ -224,7 +215,7 @@ const UserInfo = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  
+
   @media (max-width: 768px) {
     display: none;
   }
@@ -238,9 +229,8 @@ const UserName = styled.span`
 
 const UserRole = styled.span`
   font-size: 12px;
-  color: ${(props) => 
-    props.darkMode ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.6)"
-  };
+  color: ${(props) =>
+    props.darkMode ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.6)"};
 `;
 
 const DropdownMenu = styled.div`
@@ -248,27 +238,25 @@ const DropdownMenu = styled.div`
   top: 100%;
   right: 0;
   margin-top: 8px;
-  background: ${(props) => 
-    props.darkMode 
+  background: ${(props) =>
+    props.darkMode
       ? "linear-gradient(135deg, #1a1a2e, #16213e)"
-      : "linear-gradient(135deg, #ffffff, #f8fafc)"
-  };
-  border: 1px solid ${(props) => 
-    props.darkMode ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.1)"
-  };
+      : "linear-gradient(135deg, #ffffff, #f8fafc)"};
+  border: 1px solid
+    ${(props) =>
+      props.darkMode ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.1)"};
   border-radius: 12px;
-  box-shadow: 0 20px 40px ${(props) => 
-    props.darkMode ? "rgba(0, 0, 0, 0.5)" : "rgba(0, 0, 0, 0.15)"
-  };
+  box-shadow: 0 20px 40px
+    ${(props) =>
+      props.darkMode ? "rgba(0, 0, 0, 0.5)" : "rgba(0, 0, 0, 0.15)"};
   backdrop-filter: blur(20px);
   min-width: 200px;
   overflow: hidden;
   z-index: 1000;
   opacity: ${(props) => (props.isOpen ? 1 : 0)};
   visibility: ${(props) => (props.isOpen ? "visible" : "hidden")};
-  transform: ${(props) => 
-    props.isOpen ? "translateY(0)" : "translateY(-10px)"
-  };
+  transform: ${(props) =>
+    props.isOpen ? "translateY(0)" : "translateY(-10px)"};
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 `;
 
@@ -286,19 +274,21 @@ const DropdownItem = styled.button`
   transition: all 0.2s ease;
 
   &:hover {
-    background: ${(props) => 
-      props.darkMode ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.05)"
-    };
+    background: ${(props) =>
+      props.darkMode ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.05)"};
   }
 `;
 
 const HeaderAdmin = ({ onToggleSidebar, darkMode, toggleDarkMode }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
+  const { user, logout } = useAuthStore();
 
   const handleLogout = () => {
-    // Xử lý đăng xuất
-    console.log("Đăng xuất");
+    logout();
+    setIsDropdownOpen(false);
+    // Redirect to login page or perform any other logout actions
+    window.location.href = "/"; // Adjust the redirect path as needed
   };
 
   return (
@@ -307,7 +297,7 @@ const HeaderAdmin = ({ onToggleSidebar, darkMode, toggleDarkMode }) => {
         <MenuButton darkMode={darkMode} onClick={onToggleSidebar}>
           <FiMenu />
         </MenuButton>
-        
+
         <SearchContainer>
           <SearchIcon darkMode={darkMode}>
             <FiSearch />
@@ -333,14 +323,20 @@ const HeaderAdmin = ({ onToggleSidebar, darkMode, toggleDarkMode }) => {
         </IconButton>
 
         <UserSection>
-          <UserButton 
+          <UserButton
             darkMode={darkMode}
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
           >
             <UserAvatar>MS</UserAvatar>
             <UserInfo>
-              <UserName darkMode={darkMode}>Mai Tuấn Sơn</UserName>
-              <UserRole darkMode={darkMode}>Admin</UserRole>
+              {user ? (
+                <>
+                  <UserName darkMode={darkMode}>{user.fullName}</UserName>
+                  <UserRole darkMode={darkMode}>{user.role}</UserRole>
+                </>
+              ) : (
+                <>Khách</>
+              )}
             </UserInfo>
             <FiChevronDown />
           </UserButton>
