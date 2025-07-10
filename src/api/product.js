@@ -1,6 +1,7 @@
 import api from ".";
-
-export const getProducts = (queryString) => api.get(`/products?${queryString}`);
+import qs from "query-string";
+export const getProducts = (params) =>
+  api.get(`/products?${qs.stringify(params)}`);
 export const createProduct = (data) => api.post("/products", data);
 export const getProduct = (id) => api.get(`/products/${id}`);
 export const updateProduct = (id, data) => api.patch(`/products/${id}`, data);
