@@ -230,8 +230,10 @@ const mainMenuItems = [
   { to: "users", label: "Người dùng", icon: <FiUsers /> },
   { to: "orders", label: "Đơn hàng", icon: <FiShoppingCart /> },
   { to: "categories", label: "Danh mục", icon: <FiBox /> },
-   { to: "subcategories", label: "Danh mục con", icon: <FiBox /> },
-  { to: "coupons", label: "Mã giảm giá", icon: <FiShoppingCart /> },
+  { to: "subcategories", label: "Danh mục con", icon: <FiBox /> },
+  { to: "attribute", label: "Thuộc tính", icon: <FiBox /> },
+  { to: "attribute-values", label: "Giá trị thuộc tính", icon: <FiBox /> },
+  { to: "variants", label: "Biến thể sản phẩm", icon: <FiBox /> },
   { to: "blogs", label: "Bài viết", icon: <FiBox /> },
   { to: "comments", label: "Bình luận", icon: <FiBox /> },
 ];

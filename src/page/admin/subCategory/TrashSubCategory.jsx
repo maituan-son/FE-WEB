@@ -1,20 +1,23 @@
 import { useEffect, useState } from "react";
 import { Modal, Form } from "react-bootstrap";
 import { toast } from "react-toastify";
-import styles from './TrashSubCategory.module.css';
-import { 
-  FiTrash2, 
-  FiRotateCcw, 
-  FiAlertTriangle, 
-  FiCalendar, 
+import styles from "./TrashSubCategory.module.css";
+import {
+  FiTrash2,
+  FiRotateCcw,
+  FiAlertTriangle,
+  FiCalendar,
   FiArrowLeft,
   FiSearch,
   FiFilter,
-  FiImage
-} from 'react-icons/fi';
-import { Link } from 'react-router-dom';
-import { deleteSubCategory, getSubCategories, restoreSubCategory } from "../../../api/subcategory";
-
+  FiImage,
+} from "react-icons/fi";
+import { Link } from "react-router-dom";
+import {
+  deleteSubCategory,
+  getSubCategories,
+  restoreSubCategory,
+} from "../../../api/subcategory";
 
 function TrashSubCategories() {
   const [deletedCategories, setDeletedCategories] = useState([]);
@@ -22,29 +25,28 @@ function TrashSubCategories() {
   const [showRestoreModal, setShowRestoreModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterBy, setFilterBy] = useState('all');
-
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterBy, setFilterBy] = useState("all");
 
   // Bạn sẽ implement các function này
   const fetchDeletedCategories = async () => {
     try {
       setLoading(true);
       // Sửa lại cách gọi API - truyền query string đúng cách
-      const params = new URLSearchParams({
-        trash: 'true',
-        page: 1,
-        limit: 10 // Hoặc số lượng bạn muốn hiển thị
-      });
-      
-      const res = await getSubCategories(params.toString());
-      console.log('Deleted categories:', res.data);
-      
+      // const params = new URLSearchParams({
+      //   trash: "true",
+      //   page: 1,
+      //   limit: 10, // Hoặc số lượng bạn muốn hiển thị
+      // });
+
+      const res = await getSubCategories({ trash: true });
+      console.log("Deleted categories:", res.data);
+
       // Kiểm tra cấu trúc dữ liệu trả về
       const deletedData = res.data?.data?.data || res.data?.data || [];
       setDeletedCategories(deletedData);
     } catch (error) {
-      console.error('Error fetching deleted categories:', error);
+      console.error("Error fetching deleted categories:", error);
       toast.error("Không thể tải danh sách thùng rác!");
       setDeletedCategories([]);
     } finally {
@@ -52,29 +54,31 @@ function TrashSubCategories() {
     }
   };
 
-
   const handleRestore = async () => {
     try {
       await restoreSubCategory(selectedCategory._id);
-      setDeletedCategories(deletedCategories.filter(cat => cat._id !== selectedCategory._id));
+      setDeletedCategories(
+        deletedCategories.filter((cat) => cat._id !== selectedCategory._id)
+      );
       setShowRestoreModal(false);
       toast.success("Khôi phục danh mục thành công!");
     } catch (error) {
-      console.error('Error restoring category:', error);
+      console.error("Error restoring category:", error);
       toast.error("Khôi phục danh mục thất bại. Vui lòng thử lại sau.");
     }
   };
 
   const handlePermanentDelete = async () => {
     try {
-        await deleteSubCategory(selectedCategory._id);
-        setDeletedCategories(deletedCategories.filter(cat => cat._id !== selectedCategory._id));
-        setShowDeleteModal(false);
-        toast.success("Xóa danh mục thành công!");
+      await deleteSubCategory(selectedCategory._id);
+      setDeletedCategories(
+        deletedCategories.filter((cat) => cat._id !== selectedCategory._id)
+      );
+      setShowDeleteModal(false);
+      toast.success("Xóa danh mục thành công!");
     } catch (error) {
-      console.error('Error deleting category:', error);
+      console.error("Error deleting category:", error);
       toast.error("Xóa danh mục thất bại. Vui lòng thử lại sau.");
-        
     }
   };
 
@@ -84,12 +88,12 @@ function TrashSubCategories() {
   }, []);
 
   const formatDeletedDate = (date) => {
-    return new Date(date).toLocaleString('vi-VN', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit'
+    return new Date(date).toLocaleString("vi-VN", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
@@ -101,15 +105,17 @@ function TrashSubCategories() {
     return diffDays;
   };
 
-  const filteredCategories = deletedCategories.filter(category => {
-    const matchesSearch = category.title.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    if (filterBy === 'all') return matchesSearch;
-    
+  const filteredCategories = deletedCategories.filter((category) => {
+    const matchesSearch = category.title
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+
+    if (filterBy === "all") return matchesSearch;
+
     const daysDeleted = getDaysDeleted(category.deletedAt);
-    if (filterBy === 'week') return matchesSearch && daysDeleted <= 7;
-    if (filterBy === 'month') return matchesSearch && daysDeleted <= 30;
-    
+    if (filterBy === "week") return matchesSearch && daysDeleted <= 7;
+    if (filterBy === "month") return matchesSearch && daysDeleted <= 30;
+
     return matchesSearch;
   });
 
@@ -129,12 +135,12 @@ function TrashSubCategories() {
       <div className={styles.contentWrapper}>
         <div className={styles.headerSection}>
           <div className={styles.headerTop}>
-            <Link to="/admin/categories" className={styles.backButton}>
+            <Link to="/admin/subcategories" className={styles.backButton}>
               <FiArrowLeft />
               Quay lại danh sách
             </Link>
           </div>
-          
+
           <div className={styles.titleSection}>
             <div className={styles.titleWithIcon}>
               <FiTrash2 className={styles.trashIcon} />
@@ -179,10 +185,9 @@ function TrashSubCategories() {
             <FiTrash2 size={64} className={styles.emptyIcon} />
             <h3>Thùng rác trống</h3>
             <p>
-              {searchTerm || filterBy !== 'all' 
-                ? 'Không tìm thấy danh mục nào phù hợp với bộ lọc'
-                : 'Chưa có danh mục nào trong thùng rác'
-              }
+              {searchTerm || filterBy !== "all"
+                ? "Không tìm thấy danh mục nào phù hợp với bộ lọc"
+                : "Chưa có danh mục nào trong thùng rác"}
             </p>
           </div>
         ) : (
@@ -205,30 +210,37 @@ function TrashSubCategories() {
                     <td data-label="STT">{index + 1}</td>
                     <td data-label="Logo" className={styles.logoCell}>
                       {category.logoUrl ? (
-                        <img 
-                          src={category.logoUrl} 
+                        <img
+                          src={category.logoUrl}
                           alt={category.title}
                           className={styles.categoryLogo}
                           onError={(e) => {
-                            e.target.style.display = 'none';
-                            e.target.nextSibling.style.display = 'flex';
+                            e.target.style.display = "none";
+                            e.target.nextSibling.style.display = "flex";
                           }}
                         />
                       ) : null}
-                      <div className={styles.noLogo} style={{display: category.logoUrl ? 'none' : 'flex'}}>
+                      <div
+                        className={styles.noLogo}
+                        style={{ display: category.logoUrl ? "none" : "flex" }}
+                      >
                         <FiImage />
                       </div>
                     </td>
                     <td data-label="Tên danh mục" className={styles.titleCell}>
-                      <span className={styles.categoryTitle}>{category.title}</span>
+                      <span className={styles.categoryTitle}>
+                        {category.title}
+                      </span>
                       <span className={styles.deletedBadge}>Đã xóa</span>
                     </td>
                     <td data-label="Mô tả" className={styles.descriptionCell}>
-                      <span className={styles.description} title={category.description}>
-                        {category.description.length > 40 
-                          ? `${category.description.substring(0, 40)}...` 
-                          : category.description
-                        }
+                      <span
+                        className={styles.description}
+                        title={category.description}
+                      >
+                        {category.description.length > 40
+                          ? `${category.description.substring(0, 40)}...`
+                          : category.description}
                       </span>
                     </td>
                     <td data-label="Ngày xóa" className={styles.dateCell}>
@@ -238,15 +250,19 @@ function TrashSubCategories() {
                       </div>
                     </td>
                     <td data-label="Đã xóa" className={styles.durationCell}>
-                      <span className={`${styles.durationBadge} ${
-                        getDaysDeleted(category.deletedAt) > 30 ? styles.warning : ''
-                      }`}>
+                      <span
+                        className={`${styles.durationBadge} ${
+                          getDaysDeleted(category.deletedAt) > 30
+                            ? styles.warning
+                            : ""
+                        }`}
+                      >
                         {getDaysDeleted(category.deletedAt)} ngày
                       </span>
                     </td>
                     <td data-label="Hành động" className={styles.actionCell}>
                       <div className={styles.actionButtons}>
-                        <button 
+                        <button
                           className={styles.restoreButton}
                           onClick={() => {
                             setSelectedCategory(category);
@@ -256,7 +272,7 @@ function TrashSubCategories() {
                         >
                           <FiRotateCcw />
                         </button>
-                        <button 
+                        <button
                           className={styles.permanentDeleteButton}
                           onClick={() => {
                             setSelectedCategory(category);
@@ -276,7 +292,11 @@ function TrashSubCategories() {
         )}
 
         {/* Restore Modal */}
-        <Modal show={showRestoreModal} onHide={() => setShowRestoreModal(false)} className={styles.customModal}>
+        <Modal
+          show={showRestoreModal}
+          onHide={() => setShowRestoreModal(false)}
+          className={styles.customModal}
+        >
           <Modal.Header closeButton className={styles.restoreModalHeader}>
             <Modal.Title className={styles.modalTitle}>
               <FiRotateCcw className={styles.modalIcon} />
@@ -287,8 +307,8 @@ function TrashSubCategories() {
             <div className={styles.confirmContent}>
               <div className={styles.categoryInfo}>
                 {selectedCategory?.logoUrl && (
-                  <img 
-                    src={selectedCategory.logoUrl} 
+                  <img
+                    src={selectedCategory.logoUrl}
                     alt={selectedCategory?.title}
                     className={styles.modalCategoryLogo}
                   />
@@ -301,13 +321,13 @@ function TrashSubCategories() {
                 </div>
               </div>
               <p className={styles.confirmText}>
-                Bạn có chắc chắn muốn khôi phục danh mục này? 
-                Danh mục sẽ được hiển thị trở lại trong danh sách chính.
+                Bạn có chắc chắn muốn khôi phục danh mục này? Danh mục sẽ được
+                hiển thị trở lại trong danh sách chính.
               </p>
             </div>
           </Modal.Body>
           <Modal.Footer className={styles.modalFooter}>
-            <button 
+            <button
               type="button"
               className={`${styles.modalButton} ${styles.secondaryButton}`}
               onClick={() => setShowRestoreModal(false)}
@@ -315,7 +335,7 @@ function TrashSubCategories() {
             >
               Hủy
             </button>
-            <button 
+            <button
               type="button"
               className={`${styles.modalButton} ${styles.restoreModalButton}`}
               onClick={handleRestore}
@@ -337,7 +357,11 @@ function TrashSubCategories() {
         </Modal>
 
         {/* Permanent Delete Modal */}
-        <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)} className={styles.customModal}>
+        <Modal
+          show={showDeleteModal}
+          onHide={() => setShowDeleteModal(false)}
+          className={styles.customModal}
+        >
           <Modal.Header closeButton className={styles.deleteModalHeader}>
             <Modal.Title className={styles.modalTitle}>
               <FiAlertTriangle className={styles.modalIcon} />
@@ -353,22 +377,22 @@ function TrashSubCategories() {
                   <p>Hành động này không thể hoàn tác.</p>
                 </div>
               </div>
-              
+
               <div className={styles.categoryInfo}>
                 <h4>{selectedCategory?.title}</h4>
                 <p className={styles.modalDescription}>
                   {selectedCategory?.description}
                 </p>
               </div>
-              
+
               <p className={styles.confirmText}>
-                Bạn có chắc chắn muốn xóa vĩnh viễn danh mục này? 
-                Tất cả dữ liệu liên quan sẽ bị mất hoàn toàn.
+                Bạn có chắc chắn muốn xóa vĩnh viễn danh mục này? Tất cả dữ liệu
+                liên quan sẽ bị mất hoàn toàn.
               </p>
             </div>
           </Modal.Body>
           <Modal.Footer className={styles.modalFooter}>
-            <button 
+            <button
               type="button"
               className={`${styles.modalButton} ${styles.secondaryButton}`}
               onClick={() => setShowDeleteModal(false)}
@@ -376,7 +400,7 @@ function TrashSubCategories() {
             >
               Hủy
             </button>
-            <button 
+            <button
               type="button"
               className={`${styles.modalButton} ${styles.dangerButton}`}
               onClick={handlePermanentDelete}

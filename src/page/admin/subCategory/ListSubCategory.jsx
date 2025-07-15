@@ -1,11 +1,23 @@
 import { useEffect, useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { toast } from "react-toastify";
-import styles from './ListSubCategories.module.css';
-import { FiEdit2, FiTrash2, FiImage, FiEye, FiPlus, FiLayers } from 'react-icons/fi';
-import { Link } from 'react-router-dom';
+import styles from "./ListSubCategories.module.css";
+import {
+  FiEdit2,
+  FiTrash2,
+  FiImage,
+  FiEye,
+  FiPlus,
+  FiLayers,
+} from "react-icons/fi";
+import { Link } from "react-router-dom";
 import { useCallback } from "react";
-import { createSubCategory, getSubCategories, softDeleteSubCategory, updateSubCategory } from "../../../api/subcategory";
+import {
+  createSubCategory,
+  getSubCategories,
+  softDeleteSubCategory,
+  updateSubCategory,
+} from "../../../api/subcategory";
 import { getCategories } from "../../../api/categoris"; // Import để lấy danh sách parent categories
 
 function ListSubCategories() {
@@ -14,14 +26,14 @@ function ListSubCategories() {
   const [searchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [limit] = useState(10); 
+  const [limit] = useState(10);
   const [isTrash] = useState(false);
-  const [form, setForm] = useState({ 
-    title: "", 
-    logoUrl: "", 
-    description: "", 
+  const [form, setForm] = useState({
+    title: "",
+    logoUrl: "",
+    description: "",
     slug: "",
-    categoryParentId: "" // Thêm trường này
+    categoryParentId: "", // Thêm trường này
   });
   const [categories, setCategories] = useState([]);
   const [parentCategories, setParentCategories] = useState([]); // Danh sách parent categories
@@ -66,23 +78,23 @@ function ListSubCategories() {
   const generateSlug = (title) => {
     return title
       .toLowerCase()
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .replace(/[đĐ]/g, 'd')
-      .replace(/[^a-z0-9 ]/g, '')
-      .replace(/\s+/g, '-')
-      .replace(/-+/g, '-')
-      .trim('-');
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[đĐ]/g, "d")
+      .replace(/[^a-z0-9 ]/g, "")
+      .replace(/\s+/g, "-")
+      .replace(/-+/g, "-")
+      .trim("-");
   };
 
   const handleClose = () => {
     setShow(false);
-    setForm({ 
-      title: "", 
-      logoUrl: "", 
-      description: "", 
+    setForm({
+      title: "",
+      logoUrl: "",
+      description: "",
       slug: "",
-      categoryParentId: ""
+      categoryParentId: "",
     });
     setEditId(null);
   };
@@ -94,16 +106,17 @@ function ListSubCategories() {
         logoUrl: category.logoUrl || "",
         description: category.description,
         slug: category.slug,
-        categoryParentId: category.categoryParentId?._id || category.categoryParentId || ""
+        categoryParentId:
+          category.categoryParentId?._id || category.categoryParentId || "",
       });
       setEditId(category._id);
     } else {
-      setForm({ 
-        title: "", 
-        logoUrl: "", 
-        description: "", 
+      setForm({
+        title: "",
+        logoUrl: "",
+        description: "",
         slug: "",
-        categoryParentId: ""
+        categoryParentId: "",
       });
       setEditId(null);
     }
@@ -120,13 +133,13 @@ function ListSubCategories() {
     try {
       e.preventDefault();
       setLoading(true);
-      
+
       // Validate categoryParentId
       if (!form.categoryParentId) {
         toast.error("Vui lòng chọn danh mục cha!");
         return;
       }
-      
+
       if (editId) {
         await updateSubCategory(editId, form);
         toast.success("Cập nhật danh mục con thành công!");
@@ -151,7 +164,8 @@ function ListSubCategories() {
         await softDeleteSubCategory(id);
         toast.success("Xóa danh mục con thành công!");
         fetchCategories();
-      } catch {
+      } catch (error) {
+        console.error("handleSoftDelete error", error);
         toast.error("Có lỗi xảy ra khi xóa!");
       } finally {
         setLoading(false);
@@ -161,11 +175,11 @@ function ListSubCategories() {
 
   // Helper function để lấy tên parent category
   const getParentCategoryName = (categoryId) => {
-    if (typeof categoryId === 'object' && categoryId?.title) {
+    if (typeof categoryId === "object" && categoryId?.title) {
       return categoryId.title; // Nếu đã populate
     }
-    const parent = parentCategories.find(cat => cat._id === categoryId);
-    return parent ? parent.title : 'Không xác định';
+    const parent = parentCategories.find((cat) => cat._id === categoryId);
+    return parent ? parent.title : "Không xác định";
   };
 
   if (loading && categories.length === 0) {
@@ -184,7 +198,9 @@ function ListSubCategories() {
       <div className={styles.contentWrapper}>
         <div className={styles.headerSection}>
           <h2 className={styles.pageTitle}>Quản lý danh mục con</h2>
-          <p className={styles.pageSubtitle}>Quản lý danh mục con của cửa hàng</p>
+          <p className={styles.pageSubtitle}>
+            Quản lý danh mục con của cửa hàng
+          </p>
         </div>
 
         <div className={styles.headerActions}>
@@ -206,114 +222,138 @@ function ListSubCategories() {
           </div>
         ) : (
           <>
-          <div className={styles.tableContainer}>
-            <table className={styles.customTable}>
-              <thead>
-                <tr>
-                  <th>STT</th>
-                  <th>Logo</th>
-                  <th>Tên danh mục con</th>
-                  <th>Danh mục cha</th>
-                  <th>Mô tả</th>
-                  <th>Slug</th>
-                  <th>Hành động</th>
-                </tr>
-              </thead>
-              <tbody>
-                {categories.map((category, index) => (
-                  <tr key={category._id}>
-                    <td data-label="STT">{index + 1 + (currentPage - 1) * limit}</td>
-                    <td data-label="Logo" className={styles.logoCell}>
-                      {category.logoUrl ? (
-                        <img 
-                          src={category.logoUrl} 
-                          alt={category.title}
-                          className={styles.categoryLogo}
-                          onError={(e) => {
-                            e.target.style.display = 'none';
-                            e.target.nextSibling.style.display = 'flex';
+            <div className={styles.tableContainer}>
+              <table className={styles.customTable}>
+                <thead>
+                  <tr>
+                    <th>STT</th>
+                    <th>Logo</th>
+                    <th>Tên danh mục con</th>
+                    <th>Danh mục cha</th>
+                    <th>Mô tả</th>
+                    <th>Slug</th>
+                    <th>Hành động</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {categories.map((category, index) => (
+                    <tr key={category._id}>
+                      <td data-label="STT">
+                        {index + 1 + (currentPage - 1) * limit}
+                      </td>
+                      <td data-label="Logo" className={styles.logoCell}>
+                        {category.logoUrl ? (
+                          <img
+                            src={category.logoUrl}
+                            alt={category.title}
+                            className={styles.categoryLogo}
+                            onError={(e) => {
+                              e.target.style.display = "none";
+                              e.target.nextSibling.style.display = "flex";
+                            }}
+                          />
+                        ) : (
+                          <div className={styles.noLogo}>
+                            <FiImage />
+                          </div>
+                        )}
+                        <div
+                          className={styles.noLogo}
+                          style={{
+                            display: category.logoUrl ? "none" : "flex",
                           }}
-                        />
-                      ) : (
-                        <div className={styles.noLogo}>
+                        >
                           <FiImage />
                         </div>
-                      )}
-                      <div className={styles.noLogo} style={{display: category.logoUrl ? 'none' : 'flex'}}>
-                        <FiImage />
-                      </div>
-                    </td>
-                    <td data-label="Tên danh mục con" className={styles.titleCell}>
-                      <span className={styles.categoryTitle}>{category.title}</span>
-                    </td>
-                    <td data-label="Danh mục cha" className={styles.parentCell}>
-                      <div className={styles.parentCategory}>
-                        <FiLayers className={styles.parentIcon} />
-                        <span className={styles.parentName}>
-                          {getParentCategoryName(category.categoryParentId)}
+                      </td>
+                      <td
+                        data-label="Tên danh mục con"
+                        className={styles.titleCell}
+                      >
+                        <span className={styles.categoryTitle}>
+                          {category.title}
                         </span>
-                      </div>
-                    </td>
-                    <td data-label="Mô tả" className={styles.descriptionCell}>
-                      <span className={styles.description} title={category.description}>
-                        {category.description.length > 50 
-                          ? `${category.description.substring(0, 50)}...` 
-                          : category.description
-                        }
-                      </span>
-                    </td>
-                    <td data-label="Slug" className={styles.slugCell}>
-                      <code className={styles.slug}>{category.slug}</code>
-                    </td>
-                    <td data-label="Hành động" className={styles.actionCell}>
-                      <div className={styles.actionButtons}>
-                        <button 
-                          className={styles.editButton}
-                          onClick={() => handleShow(category)}
-                          title="Chỉnh sửa"
+                      </td>
+                      <td
+                        data-label="Danh mục cha"
+                        className={styles.parentCell}
+                      >
+                        <div className={styles.parentCategory}>
+                          <FiLayers className={styles.parentIcon} />
+                          <span className={styles.parentName}>
+                            {getParentCategoryName(category.categoryParentId)}
+                          </span>
+                        </div>
+                      </td>
+                      <td data-label="Mô tả" className={styles.descriptionCell}>
+                        <span
+                          className={styles.description}
+                          title={category.description}
                         >
-                          <FiEdit2 />
-                        </button>
-                        <button 
-                          className={styles.deleteButton}
-                          onClick={() => handleSoftDelete(category._id)}
-                          title="Xóa"
-                        >
-                          <FiTrash2 />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-         
-          <div className={`${styles.pagination} ${styles.advanced}`}>
-            <button
-              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-              disabled={currentPage === 1}
-              className={styles.pageButton}
-            >
-              ← Trang trước
-            </button>
+                          {category.description.length > 50
+                            ? `${category.description.substring(0, 50)}...`
+                            : category.description}
+                        </span>
+                      </td>
+                      <td data-label="Slug" className={styles.slugCell}>
+                        <code className={styles.slug}>{category.slug}</code>
+                      </td>
+                      <td data-label="Hành động" className={styles.actionCell}>
+                        <div className={styles.actionButtons}>
+                          <button
+                            className={styles.editButton}
+                            onClick={() => handleShow(category)}
+                            title="Chỉnh sửa"
+                          >
+                            <FiEdit2 />
+                          </button>
+                          <button
+                            className={styles.deleteButton}
+                            onClick={() => handleSoftDelete(category._id)}
+                            title="Xóa"
+                          >
+                            <FiTrash2 />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
 
-            <span className={styles.pageInfo}>
-              Trang {currentPage} / {totalPages}
-            </span>
+            <div className={`${styles.pagination} ${styles.advanced}`}>
+              <button
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+                className={styles.pageButton}
+              >
+                ← Trang trước
+              </button>
 
-            <button
-              onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-              disabled={currentPage === totalPages}
-              className={styles.pageButton}
-            >
-              Trang sau →
-            </button>
-          </div>  
+              <span className={styles.pageInfo}>
+                Trang {currentPage} / {totalPages}
+              </span>
+
+              <button
+                onClick={() =>
+                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                }
+                disabled={currentPage === totalPages}
+                className={styles.pageButton}
+              >
+                Trang sau →
+              </button>
+            </div>
           </>
         )}
 
-        <Modal show={show} onHide={handleClose} className={styles.customModal} size="lg">
+        <Modal
+          show={show}
+          onHide={handleClose}
+          className={styles.customModal}
+          size="lg"
+        >
           <Modal.Header closeButton className={styles.modalHeader}>
             <Modal.Title className={styles.modalTitle}>
               {editId ? "Cập nhật" : "Thêm mới"} danh mục con
@@ -345,7 +385,9 @@ function ListSubCategories() {
                   <select
                     className={styles.formInput}
                     value={form.categoryParentId}
-                    onChange={(e) => setForm({ ...form, categoryParentId: e.target.value })}
+                    onChange={(e) =>
+                      setForm({ ...form, categoryParentId: e.target.value })
+                    }
                     required
                   >
                     <option value="">Chọn danh mục cha...</option>
@@ -357,7 +399,8 @@ function ListSubCategories() {
                   </select>
                   {parentCategories.length === 0 && (
                     <small className={styles.helpText}>
-                      Không có danh mục cha nào. Vui lòng tạo danh mục cha trước.
+                      Không có danh mục cha nào. Vui lòng tạo danh mục cha
+                      trước.
                     </small>
                   )}
                 </div>
@@ -386,7 +429,9 @@ function ListSubCategories() {
                     type="url"
                     className={styles.formInput}
                     value={form.logoUrl}
-                    onChange={(e) => setForm({ ...form, logoUrl: e.target.value })}
+                    onChange={(e) =>
+                      setForm({ ...form, logoUrl: e.target.value })
+                    }
                     placeholder="https://example.com/logo.png"
                   />
                 </div>
@@ -394,21 +439,24 @@ function ListSubCategories() {
 
               {form.logoUrl && (
                 <div className={styles.imagePreview}>
-                  <img 
-                    src={form.logoUrl} 
-                    alt="Preview" 
+                  <img
+                    src={form.logoUrl}
+                    alt="Preview"
                     className={styles.previewImage}
                     onError={(e) => {
-                      e.target.style.display = 'none';
-                      e.target.nextSibling.style.display = 'block';
+                      e.target.style.display = "none";
+                      e.target.nextSibling.style.display = "block";
                     }}
                   />
-                  <div className={styles.previewError} style={{display: 'none'}}>
+                  <div
+                    className={styles.previewError}
+                    style={{ display: "none" }}
+                  >
                     Không thể tải ảnh
                   </div>
                 </div>
               )}
-              
+
               <div className={styles.formGroup}>
                 <label className={styles.formLabel}>
                   <span>Mô tả</span>
@@ -418,14 +466,16 @@ function ListSubCategories() {
                   rows={4}
                   className={styles.formTextarea}
                   value={form.description}
-                  onChange={(e) => setForm({ ...form, description: e.target.value })}
+                  onChange={(e) =>
+                    setForm({ ...form, description: e.target.value })
+                  }
                   placeholder="Nhập mô tả cho danh mục con..."
                   required
                 />
               </div>
             </Modal.Body>
             <Modal.Footer className={styles.modalFooter}>
-              <button 
+              <button
                 type="button"
                 className={`${styles.modalButton} ${styles.secondaryButton}`}
                 onClick={handleClose}
@@ -433,7 +483,7 @@ function ListSubCategories() {
               >
                 Hủy
               </button>
-              <button 
+              <button
                 type="submit"
                 className={`${styles.modalButton} ${styles.primaryButton}`}
                 disabled={loading}
@@ -443,8 +493,10 @@ function ListSubCategories() {
                     <div className={styles.miniSpinner}></div>
                     {editId ? "Đang cập nhật..." : "Đang thêm..."}
                   </span>
+                ) : editId ? (
+                  "Cập nhật"
                 ) : (
-                  editId ? "Cập nhật" : "Thêm mới"
+                  "Thêm mới"
                 )}
               </button>
             </Modal.Footer>

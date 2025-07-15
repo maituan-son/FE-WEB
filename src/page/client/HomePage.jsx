@@ -1,24 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import { getProducts } from '../../api/product';
-
+import React, { useState, useEffect } from "react";
+import { getProducts } from "../../api/product";
 
 const HomePage = () => {
   const [products, setProducts] = useState([]);
 
   const fetchProducts = async () => {
     try {
-      const response = await getProducts('?page=1&limit=8');
-      console.log('Fetched products:', response.data);
-      
-       const products = response.data.data.products; 
+      const response = await getProducts({
+        trash: true,
+      });
+      console.log("Fetched products:", response.data.data);
+
+      const products = response.data.data.data;
       setProducts(products);
-     
     } catch (error) {
-      console.error('Failed to fetch products:', error);
+      console.error("Failed to fetch products:", error);
     }
   };
   useEffect(() => {
-    fetchProducts();  
+    fetchProducts();
   }, []);
 
   const renderPrice = (product) => {
@@ -28,15 +28,21 @@ const HomePage = () => {
     if (!isNaN(originalPrice) && originalPrice > currentPrice) {
       return (
         <div className="product-price">
-          <span className="current-price">Rp {currentPrice.toLocaleString()}</span>
-          <span className="original-price">Rp {originalPrice.toLocaleString()}</span>
+          <span className="current-price">
+            Rp {currentPrice.toLocaleString()}
+          </span>
+          <span className="original-price">
+            Rp {originalPrice.toLocaleString()}
+          </span>
         </div>
       );
     }
     if (!isNaN(currentPrice)) {
       return (
         <div className="product-price">
-          <span className="current-price">Rp {currentPrice.toLocaleString()}</span>
+          <span className="current-price">
+            Rp {currentPrice.toLocaleString()}
+          </span>
         </div>
       );
     }
@@ -54,8 +60,8 @@ const HomePage = () => {
                 <span className="status">New Arrival</span>
                 <span className="title">Discover Our New Collection</span>
                 <div className="description">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit
-                  tellus, luctus nec ullamcorper mattis.
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut
+                  elit tellus, luctus nec ullamcorper mattis.
                 </div>
                 <a href="./shop" id="buyNow" className="btn">
                   BUY Now
@@ -91,8 +97,12 @@ const HomePage = () => {
               products.map((product) => (
                 <div className="product-card" key={product._id}>
                   {product.discount && (
-                    <div className={`product-tag ${product.discount > 0 ? 'tag-discount' : 'tag-new'}`}>
-                      {product.discount > 0 ? `-${product.discount}%` : 'New'}
+                    <div
+                      className={`product-tag ${
+                        product.discount > 0 ? "tag-discount" : "tag-new"
+                      }`}
+                    >
+                      {product.discount > 0 ? `-${product.discount}%` : "New"}
                     </div>
                   )}
                   <div className="product-image">
@@ -100,7 +110,11 @@ const HomePage = () => {
                   </div>
                   <div className="product-info">
                     <h3 className="product-name">{product.title}</h3>
-                    <p className="product-description">{product.shortDescription ? product.shortDescription.slice(0, 40) + '...' : product.description.slice(0, 40) + '...'}</p>
+                    <p className="product-description">
+                      {product.shortDescription
+                        ? product.shortDescription.slice(0, 40) + "..."
+                        : product.description.slice(0, 40) + "..."}
+                    </p>
                     {renderPrice(product)}
                   </div>
                   <div className="hover-overlay">

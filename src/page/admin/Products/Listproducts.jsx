@@ -92,7 +92,8 @@ function ListProducts() {
   const fetchBrands = useCallback(async () => {
     try {
       const res = await getBrands({ limit: 100 });
-      setBrands(res.data.data.data || []);
+
+      setBrands(res.data.data || []);
     } catch (error) {
       console.log("Error fetching brands:", error);
     }
@@ -497,7 +498,7 @@ function ListProducts() {
       return brandId.name;
     }
     const brand = brands.find((b) => b._id === brandId);
-    return brand ? brand.name : "Không xác định";
+    return brand ? brand.title : "Không xác định";
   };
 
   const getSubCategoryName = (subCategoryId) => {
@@ -827,7 +828,7 @@ function ListProducts() {
                       <option value="">Chọn thương hiệu...</option>
                       {brands.map((brand) => (
                         <option key={brand._id} value={brand._id}>
-                          {brand.name}
+                          {brand.title}
                         </option>
                       ))}
                     </select>
