@@ -233,7 +233,7 @@ const mainMenuItems = [
   { to: "subcategories", label: "Danh mục con", icon: <FiBox /> },
   { to: "attribute", label: "Thuộc tính", icon: <FiBox /> },
   { to: "attribute-values", label: "Giá trị thuộc tính", icon: <FiBox /> },
-  { to: "variants", label: "Biến thể sản phẩm", icon: <FiBox /> },
+  // { to: "variants", label: "Biến thể sản phẩm", icon: <FiBox /> },
   { to: "blogs", label: "Bài viết", icon: <FiBox /> },
   { to: "comments", label: "Bình luận", icon: <FiBox /> },
 ];

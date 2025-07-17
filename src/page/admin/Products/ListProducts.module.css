@@ -1446,3 +1446,483 @@ select.formInput:focus {
   margin: 1rem 0;
   font-size: 14px;
 }
+
+/* Bulk Variant Creation Styles */
+.variantButtonGroup {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.addBulkVariantBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.addBulkVariantBtn:hover {
+  background: linear-gradient(135deg, #5b21b6, #7c3aed);
+  transform: translateY(-1px);
+}
+
+.bulkVariantForm {
+  padding: 2rem;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border: 2px solid #e2e8f0;
+  border-radius: 16px;
+  margin-top: 1rem;
+}
+
+.bulkVariantForm h6 {
+  margin: 0 0 1.5rem 0;
+  color: #1e293b;
+  font-weight: 700;
+  font-size: 18px;
+  text-align: center;
+}
+
+.bulkStep {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.stepTitle {
+  margin: 0 0 1rem 0;
+  color: #6366f1;
+  font-weight: 600;
+  font-size: 16px;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.bulkFormRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.bulkFormGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.bulkFormGroup label {
+  font-size: 14px;
+  color: #374151;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.bulkFormInput {
+  padding: 0.75rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.bulkFormInput:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.attributeGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.attributeCard {
+  background: white;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1rem;
+  transition: all 0.3s ease;
+}
+
+.attributeCard:hover {
+  border-color: #6366f1;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+}
+
+.attributeHeader {
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.attributeCheckbox,
+.valueCheckbox,
+.combinationCheckbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.attributeCheckbox:hover,
+.valueCheckbox:hover,
+.combinationCheckbox:hover {
+  background: #f8fafc;
+}
+
+.hiddenCheckbox {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.customCheckbox {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #d1d5db;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.customCheckbox::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  transition: left 0.5s;
+}
+
+.hiddenCheckbox:checked + .customCheckbox {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  border-color: #6366f1;
+  transform: scale(1.05);
+}
+
+.hiddenCheckbox:checked + .customCheckbox::before {
+  left: 100%;
+}
+
+.checkIcon {
+  width: 12px;
+  height: 12px;
+  color: white;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all 0.2s ease;
+}
+
+.hiddenCheckbox:checked + .customCheckbox .checkIcon {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.attributeName {
+  font-weight: 600;
+  color: #1e293b;
+  font-size: 15px;
+}
+
+.valuesList {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 0.5rem;
+}
+
+.valueName {
+  font-size: 14px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.generateBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 2rem;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 0 auto;
+  font-size: 16px;
+}
+
+.generateBtn:hover {
+  background: linear-gradient(135deg, #059669, #047857);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+}
+
+.combinationGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 1rem;
+  max-height: 500px;
+  overflow-y: auto;
+  padding: 0.5rem;
+}
+
+.combinationCard {
+  background: white;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1rem;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.combinationCard:hover {
+  border-color: #6366f1;
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.15);
+  transform: translateY(-2px);
+}
+
+.combinationCard.disabled {
+  opacity: 0.6;
+  background: #f8fafc;
+  border-color: #d1d5db;
+}
+
+.combinationCard.disabled:hover {
+  transform: none;
+  box-shadow: none;
+  border-color: #d1d5db;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 1rem;
+}
+
+.combinationTags {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.combinationTag {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  font-size: 12px;
+  width: fit-content;
+}
+
+.tagAttribute {
+  font-weight: 600;
+  color: #6366f1;
+}
+
+.tagValue {
+  background: #6366f1;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.combinationInputs {
+  padding-top: 1rem;
+  border-top: 1px solid #f1f5f9;
+}
+
+.inputGroup {
+  margin-bottom: 0.75rem;
+}
+
+.inputGroup label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.combinationInput {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  background: white;
+}
+
+.combinationInput:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
+}
+
+.combinationInput:disabled {
+  background: #f9fafb;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.inputRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.bulkFormActions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid #e2e8f0;
+}
+
+.cancelBulkBtn {
+  padding: 0.75rem 1.5rem;
+  background: #6b7280;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cancelBulkBtn:hover {
+  background: #4b5563;
+}
+
+.saveBulkBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.saveBulkBtn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #5b21b6, #7c3aed);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(99, 102, 241, 0.3);
+}
+
+.saveBulkBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Responsive Design for Bulk Forms */
+@media (max-width: 768px) {
+  .variantButtonGroup {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .attributeGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .combinationGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .bulkFormRow {
+    grid-template-columns: 1fr;
+  }
+  
+  .inputRow {
+    grid-template-columns: 1fr;
+  }
+  
+  .bulkFormActions {
+    flex-direction: column;
+  }
+  
+  .bulkStep {
+    padding: 1rem;
+  }
+  
+  .bulkVariantForm {
+    padding: 1rem;
+  }
+}
+
+/* Additional Animation Effects */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.bulkVariantForm {
+  animation: slideIn 0.3s ease-out;
+}
+
+.combinationCard {
+  animation: slideIn 0.3s ease-out;
+}
+
+/* Scrollbar Styling for Combination Grid */
+.combinationGrid::-webkit-scrollbar {
+  width: 8px;
+}
+
+.combinationGrid::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+.combinationGrid::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.combinationGrid::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}

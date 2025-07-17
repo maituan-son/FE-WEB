@@ -56,7 +56,38 @@ const VariantManager = () => {
   useEffect(() => {
     fetchAllData();
     fetchAttributeValues();
+    fetchAttributes();
+    fetchProductVariant();
   }, []);
+  const fetchAttributes = async () => {
+    try {
+      const attributesData = await getAttributes();
+      // Check data structure
+
+      setAttributes(attributesData.data.data);
+    } catch (error) {
+      console.error("Failed to fetch attributes:", error);
+    }
+  };
+  const fetchAttributeValues = async () => {
+    try {
+      const valuesData = await getListAttributeValue();
+
+      setAttributeValues(valuesData.data.data);
+    } catch (error) {
+      console.error("Failed to fetch attribute values:", error);
+    }
+  };
+  const fetchProductVariant = async () => {
+    try {
+      const variantData = await getListProductVariant();
+      console.log("Fetched variants:", variantData.data.data);
+
+      setVariants(variantData.data.data);
+    } catch (error) {
+      console.error("Failed to fetch product variant:", error);
+    }
+  };
 
   const fetchAllData = async () => {
     setLoading(true);
@@ -66,8 +97,6 @@ const VariantManager = () => {
         getAttributes(),
         getListAttributeValue(),
       ]);
-      console.log("Attributes:", attributesData); // Check data structure
-      console.log("Values:", valuesData); // Check data structure
 
       // Enrich variants with attribute and value names
       const enrichedVariants = variantsData.map((variant) => {
@@ -85,7 +114,6 @@ const VariantManager = () => {
 
       setVariants(enrichedVariants);
       setAttributes(attributesData);
-
       setAttributeValues(valuesData);
     } catch (error) {
       toast.error("Lỗi khi tải dữ liệu: " + error.message);
@@ -680,7 +708,7 @@ const VariantManager = () => {
                       }`}
                     >
                       <option value="">Chọn giá trị</option>
-                      {getAvailableValues().map((value) => (
+                      {attributeValues.map((value) => (
                         <option key={value._id} value={value._id}>
                           {value.value}
                         </option>

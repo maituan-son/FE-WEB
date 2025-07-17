@@ -6,9 +6,7 @@ const HomePage = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await getProducts({
-        trash: true,
-      });
+      const response = await getProducts();
       console.log("Fetched products:", response.data.data);
 
       const products = response.data.data.data;

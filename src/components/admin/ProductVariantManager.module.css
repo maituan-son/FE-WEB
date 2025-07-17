@@ -1,0 +1,367 @@
+.variantManager {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 1.5rem;
+  background-color: #ffffff;
+  margin-bottom: 1.5rem;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.variantCount {
+  background-color: #3b82f6;
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.currentVariantsList {
+  margin-bottom: 1.5rem;
+}
+
+.variantsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.variantItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.variantItem:hover {
+  background-color: #f3f4f6;
+}
+
+.variantDetails {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.variantInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.variantLabel {
+  font-weight: 500;
+  color: #374151;
+}
+
+.variantSku {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.variantPricing {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+}
+
+.variantPrice {
+  font-weight: 600;
+  color: #059669;
+}
+
+.variantStock {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.deleteVariantBtn {
+  background-color: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 1rem;
+}
+
+.deleteVariantBtn:hover {
+  background-color: #dc2626;
+}
+
+.addVariantSection {
+  margin-top: 1rem;
+}
+
+.addVariantBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.addVariantBtn:hover {
+  background-color: #2563eb;
+}
+
+.variantForm {
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-top: 1rem;
+}
+
+.variantFormHeader {
+  margin-bottom: 1rem;
+}
+
+.variantFormHeader h6 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.variantFormRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.variantFormGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.variantFormGroup label {
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #374151;
+  font-size: 0.875rem;
+}
+
+.variantFormSelect,
+.variantFormInput {
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background-color: white;
+  font-size: 0.875rem;
+  transition: border-color 0.2s ease;
+}
+
+.variantFormSelect:focus,
+.variantFormInput:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.variantFormSelect:disabled {
+  background-color: #f3f4f6;
+  color: #6b7280;
+  cursor: not-allowed;
+}
+
+.variantFormActions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.cancelVariantBtn {
+  background-color: #6b7280;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.cancelVariantBtn:hover {
+  background-color: #4b5563;
+}
+
+.saveVariantBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #059669;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.saveVariantBtn:hover:not(:disabled) {
+  background-color: #047857;
+}
+
+.saveVariantBtn:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.quickEditVariants {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.quickEditVariants h6 {
+  margin: 0 0 1rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.variantsTable {
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.variantTableHeader {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr auto;
+  gap: 0.5rem;
+  background-color: #f3f4f6;
+  padding: 0.75rem;
+  font-weight: 600;
+  color: #374151;
+  font-size: 0.875rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.variantRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr auto;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  align-items: center;
+  border-bottom: 1px solid #e5e7eb;
+  background-color: white;
+}
+
+.variantRow:last-child {
+  border-bottom: none;
+}
+
+.variantRow:hover {
+  background-color: #f9fafb;
+}
+
+.variantAttribute,
+.variantValue {
+  font-size: 0.875rem;
+  color: #374151;
+  font-weight: 500;
+}
+
+.variantInput {
+  padding: 0.375rem 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  transition: border-color 0.2s ease;
+}
+
+.variantInput:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+@media (max-width: 1024px) {
+  .variantFormRow {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+  
+  .variantTableHeader,
+  .variantRow {
+    grid-template-columns: 1fr 1fr 0.8fr 0.8fr 0.8fr 0.8fr auto;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .variantManager {
+    padding: 1rem;
+  }
+  
+  .variantFormRow {
+    grid-template-columns: 1fr;
+  }
+  
+  .variantDetails {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .variantPricing {
+    align-items: flex-start;
+  }
+  
+  .variantTableHeader,
+  .variantRow {
+    display: none;
+  }
+  
+  .variantsTable {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .variantRow {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    background-color: white;
+  }
+}
