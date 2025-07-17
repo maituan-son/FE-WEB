@@ -55,6 +55,7 @@ const VariantManager = () => {
   // Fetch data functions
   useEffect(() => {
     fetchAllData();
+    fetchAttributeValues();
   }, []);
 
   const fetchAllData = async () => {
