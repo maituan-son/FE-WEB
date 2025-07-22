@@ -1,4 +1,4 @@
-// Reset and Base Styles
+ Reset and Base Styles
 * {
     margin: 0;
     padding: 0;
@@ -6,8 +6,7 @@
     font-family: 'Poppins', sans-serif;
 }
 
-
-// Product Detail Container
+ Product Detail Container
 .product-detail-container {
     display: flex;
     gap: 30px;
@@ -15,10 +14,10 @@
     margin: 0 auto;
     background-color: #fff;
     padding: 20px;
-    // border-radius: 10px;
-    // box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+   border-radius: 10px;
+   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 
-    // Product Images
+   Product Images
     .product-images {
 
         display: flex;
@@ -33,11 +32,11 @@
 
             .thumbnail {
                 width: 86px;
-                height: 80px; //chiều dài 
+                height: 80px;chiều dài 
                 object-fit: cover;  
                 margin-top: 30px;
                 border-radius: 5px;
-                cursor: pointer; //khi rê chuột vào sẽ hiện ra cái tay
+                cursor: pointer;khi rê chuột vào sẽ hiện ra cái tay
                 background: #f4dbb9;
                 border: 1px solid #ddd;
 
@@ -62,7 +61,7 @@
         }
     }
 
-    // Product Info
+   Product Info
     .product-info {
         flex: 1;
         padding: 20px;
@@ -118,7 +117,7 @@
             
         }
 
-        // Product Options
+       Product Options
         .product-options {
             margin-bottom: 20px;
 
@@ -167,7 +166,7 @@
             }
         }
 
-        // Product Actions
+       Product Actions
         .product-actions {
             display: flex;
             gap: 15px;
@@ -201,7 +200,7 @@
 
             .add-to-cart {
                 padding: 10px 30px;
-                // background-color: #000;
+               background-color: #000;
                 margin-bottom: 0;
                 color: #070707;
                 border: none;
@@ -228,7 +227,7 @@
             }
         }
 
-        // Product Meta
+       Product Meta
         .product-meta {
             border-top: 1px solid #ddd;
             padding-top: 50px;
@@ -268,23 +267,22 @@
         }
     }
 }
-
-// Product Tabs
+ Product Tabs
 .product-tabs {
     width: 100%;
     margin: 3px auto;
     background-color: #fff;
     padding: 20px;
   
-    // border-radius: 10px;
-    // box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+   border-radius: 10px;
+   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 
     .tabs-header {
         display: flex;
         justify-content: center;
         gap: 20px;
         
-        // border-bottom: 1px solid #ddd;
+       border-bottom: 1px solid #ddd;
         padding-bottom: 10px;
         margin-bottom: 20px;
         span{
@@ -327,8 +325,7 @@
         }
     }
 }
-
-// Additional Images
+ Additional Images
 .additional-images {
     max-width: 100%;
     margin: 0 auto;
@@ -345,8 +342,7 @@
         border-radius: 10px;
         background: #f4dbb9;
     }
-}
-// Responsive Styles
+} Responsive Styles
 @media screen and (max-width: 1200px) {
     .product-detail-container {
       padding: 15px;

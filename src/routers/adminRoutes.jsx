@@ -10,6 +10,7 @@ import TrashSubCategories from "../page/admin/subCategory/TrashSubCategory";
 import AttributeList from "../page/admin/AttributeList/AttributeList";
 import AttributeValueList from "../page/admin/AttributeValueList/AttributeValueList";
 import VariantManager from "../page/admin/VariantManager/VariantManager";
+import ListBrands from "../page/admin/brands/ListBrands";
 
 const adminRoutes = [
   {
@@ -56,6 +57,10 @@ const adminRoutes = [
   {
     path: "variants",
     element: <VariantManager />,
+  },
+  {
+    path: "brands",
+    element: <ListBrands />,
   },
 ];
 export default adminRoutes;

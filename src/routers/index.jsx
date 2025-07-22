@@ -1,7 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import clienRoutes from "./clienRoutes";
 
-import LayoutAdmin from "../components/Layout/LayoutAdmin";
+import AdminLayout from "../components/Layout/AdminLayout";
 import LayoutClient from "../components/Layout/LayoutClien";
 
 import Login from "../page/Login";
@@ -25,7 +25,7 @@ const routerApp = createBrowserRouter([
     children: [
       {
         path: "",
-        element: <LayoutAdmin />, // layout của admin
+        element: <AdminLayout />, // layout của admin
         children: adminRoutes,
       },
     ],

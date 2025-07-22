@@ -1,0 +1,36 @@
+/* Layout styles for fixed header */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Main content offset for fixed header */
+.main-content {
+  padding-top: 80px; /* Height of desktop header */
+}
+
+/* Content wrapper */
+.page-content {
+  min-height: calc(100vh - 80px);
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    padding-top: 70px; /* Height of mobile header */
+  }
+  
+  .page-content {
+    min-height: calc(100vh - 70px);
+  }
+}
+
+@media (max-width: 480px) {
+  .main-content {
+    padding-top: 65px; /* Height of small mobile header */
+  }
+  
+  .page-content {
+    min-height: calc(100vh - 65px);
+  }
+}

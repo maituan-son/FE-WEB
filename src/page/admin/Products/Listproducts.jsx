@@ -23,6 +23,8 @@ import Pagination from "../../../components/admin/Pagination";
 import LoadingSpinner from "../../../components/ui/LoadingSpinner";
 
 function ListProducts() {
+  // State loading khi submit sản phẩm
+  const [submitting, setSubmitting] = useState(false);
   const [show, setShow] = useState(false);
   const [editId, setEditId] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -176,14 +178,14 @@ function ListProducts() {
   };
 
   const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSubmitting(true);
     try {
-      e.preventDefault();
-      setLoading(true);
-
       // Validate product data
       const validationErrors = validateProductData(form);
       if (validationErrors.length > 0) {
         toast.error(validationErrors[0]);
+        setSubmitting(false);
         return;
       }
 
@@ -237,6 +239,7 @@ function ListProducts() {
       toast.error("Có lỗi xảy ra!");
     } finally {
       setUploadingImages(false);
+      setSubmitting(false);
     }
   };
 
@@ -389,9 +392,9 @@ function ListProducts() {
               <button
                 type="submit"
                 className={`${styles.modalButton} ${styles.primaryButton}`}
-                disabled={loading || uploadingImages}
+                disabled={submitting || uploadingImages}
               >
-                {loading || uploadingImages ? (
+                {submitting || uploadingImages ? (
                   <span className={styles.loadingText}>
                     <div className={styles.miniSpinner}></div>
                     {uploadingImages

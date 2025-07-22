@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { toast } from "react-toastify";
 import styles from "./ListSubCategories.module.css";
+
 import {
   FiEdit2,
   FiTrash2,

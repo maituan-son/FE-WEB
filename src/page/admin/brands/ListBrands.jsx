@@ -1,31 +1,45 @@
 import { useEffect, useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { toast } from "react-toastify";
-import {  } from "../../../api/brands";
-import styles from './ListCategories.module.css';
-import { FiEdit2, FiTrash2, FiImage, FiEye, FiPlus, FiUpload, FiX } from 'react-icons/fi';
-import { Link } from 'react-router-dom';
+import {
+  getBrand,
+  getBrands,
+  createBrand,
+  updateBrand,
+  deleteBrand,
+} from "../../../api/brands";
+import styles from "./ListBrands.module.css";
+import {
+  FiEdit2,
+  FiTrash2,
+  FiImage,
+  FiEye,
+  FiPlus,
+  FiUpload,
+  FiX,
+} from "react-icons/fi";
+import { Link } from "react-router-dom";
 import { uploadImage } from "../../../api/imageUpload";
 import { useCallback } from "react";
 import { getBanners } from "../../../api/banner";
 
-function ListCategories() {
+function ListBrands() {
   const [show, setShow] = useState(false);
   const [editId, setEditId] = useState(null);
   const [searchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [limit] = useState(10); 
+  const [limit] = useState(10);
   const [isTrash] = useState(false);
-  const [form, setForm] = useState({ 
-    title: "", 
-    logoUrl: "", 
-    description: "", 
-    slug: "" 
+  const [form, setForm] = useState({
+    title: "",
+    logoUrl: "",
+    description: "",
+    slug: "",
   });
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
-  
+
   // New states for file upload
   const [selectedFile, setSelectedFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
@@ -60,13 +74,13 @@ function ListCategories() {
   const generateSlug = (title) => {
     return title
       .toLowerCase()
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .replace(/[đĐ]/g, 'd')
-      .replace(/[^a-z0-9 ]/g, '')
-      .replace(/\s+/g, '-')
-      .replace(/-+/g, '-')
-      .trim('-');
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[đĐ]/g, "d")
+      .replace(/[^a-z0-9 ]/g, "")
+      .replace(/\s+/g, "-")
+      .replace(/-+/g, "-")
+      .trim("-");
   };
 
   const handleClose = () => {
@@ -85,7 +99,7 @@ function ListCategories() {
         title: category.title,
         logoUrl: category.logoUrl || "",
         description: category.description,
-        slug: category.slug
+        slug: category.slug,
       });
       setEditId(category._id);
       // Set existing image preview
@@ -119,21 +133,27 @@ function ListCategories() {
   // Validate and set file
   const validateAndSetFile = (file) => {
     // Validate file type
-    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+    const allowedTypes = [
+      "image/jpeg",
+      "image/jpg",
+      "image/png",
+      "image/gif",
+      "image/webp",
+    ];
     if (!allowedTypes.includes(file.type)) {
-      toast.error('Chỉ chấp nhận file ảnh (JPG, PNG, GIF, WebP)');
+      toast.error("Chỉ chấp nhận file ảnh (JPG, PNG, GIF, WebP)");
       return;
     }
 
     // Validate file size (5MB)
     const maxSize = 5 * 1024 * 1024;
     if (file.size > maxSize) {
-      toast.error('Kích thước file không được vượt quá 5MB');
+      toast.error("Kích thước file không được vượt quá 5MB");
       return;
     }
 
     setSelectedFile(file);
-    
+
     // Create preview
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -167,7 +187,7 @@ function ListCategories() {
     e.preventDefault();
     e.stopPropagation();
     setIsDragOver(false);
-    
+
     const files = e.dataTransfer.files;
     if (files.length > 0) {
       validateAndSetFile(files[0]);
@@ -189,11 +209,11 @@ function ListCategories() {
       setUploadingImage(true);
       const response = await uploadImage(selectedFile);
       const imageUrl = response.data.url || response.data.data?.url; // Adjust based on your API response
-      toast.success('Upload ảnh thành công!');
+      toast.success("Upload ảnh thành công!");
       return imageUrl;
     } catch (error) {
-      console.error('Error uploading image:', error);
-      toast.error('Upload ảnh thất bại!');
+      console.error("Error uploading image:", error);
+      toast.error("Upload ảnh thất bại!");
       throw error;
     } finally {
       setUploadingImage(false);
@@ -204,7 +224,7 @@ function ListCategories() {
     try {
       e.preventDefault();
       setLoading(true);
-      
+
       let logoUrl = form.logoUrl;
 
       // Upload new image if selected
@@ -214,9 +234,9 @@ function ListCategories() {
 
       const formData = {
         ...form,
-        logoUrl
+        logoUrl,
       };
-      
+
       if (editId) {
         await updateCategory(editId, formData);
         toast.success("Cập nhật danh mục thành công!");
@@ -265,7 +285,9 @@ function ListCategories() {
       <div className={styles.contentWrapper}>
         <div className={styles.headerSection}>
           <h2 className={styles.pageTitle}>Quản lý danh mục</h2>
-          <p className={styles.pageSubtitle}>Quản lý danh mục sản phẩm của cửa hàng</p>
+          <p className={styles.pageSubtitle}>
+            Quản lý danh mục sản phẩm của cửa hàng
+          </p>
         </div>
 
         <div className={styles.headerActions}>
@@ -302,16 +324,18 @@ function ListCategories() {
                 <tbody>
                   {categories.map((category, index) => (
                     <tr key={category._id}>
-                      <td data-label="STT">{index + 1 + (currentPage - 1) * limit}</td>
+                      <td data-label="STT">
+                        {index + 1 + (currentPage - 1) * limit}
+                      </td>
                       <td data-label="Logo" className={styles.logoCell}>
                         {category.logoUrl ? (
-                          <img 
-                            src={category.logoUrl} 
+                          <img
+                            src={category.logoUrl}
                             alt={category.title}
                             className={styles.categoryLogo}
                             onError={(e) => {
-                              e.target.style.display = 'none';
-                              e.target.nextSibling.style.display = 'flex';
+                              e.target.style.display = "none";
+                              e.target.nextSibling.style.display = "flex";
                             }}
                           />
                         ) : (
@@ -319,19 +343,31 @@ function ListCategories() {
                             <FiImage />
                           </div>
                         )}
-                        <div className={styles.noLogo} style={{display: category.logoUrl ? 'none' : 'flex'}}>
+                        <div
+                          className={styles.noLogo}
+                          style={{
+                            display: category.logoUrl ? "none" : "flex",
+                          }}
+                        >
                           <FiImage />
                         </div>
                       </td>
-                      <td data-label="Tên danh mục" className={styles.titleCell}>
-                        <span className={styles.categoryTitle}>{category.title}</span>
+                      <td
+                        data-label="Tên danh mục"
+                        className={styles.titleCell}
+                      >
+                        <span className={styles.categoryTitle}>
+                          {category.title}
+                        </span>
                       </td>
                       <td data-label="Mô tả" className={styles.descriptionCell}>
-                        <span className={styles.description} title={category.description}>
-                          {category.description.length > 50 
-                            ? `${category.description.substring(0, 50)}...` 
-                            : category.description
-                          }
+                        <span
+                          className={styles.description}
+                          title={category.description}
+                        >
+                          {category.description.length > 50
+                            ? `${category.description.substring(0, 50)}...`
+                            : category.description}
                         </span>
                       </td>
                       <td data-label="Slug" className={styles.slugCell}>
@@ -339,14 +375,14 @@ function ListCategories() {
                       </td>
                       <td data-label="Hành động" className={styles.actionCell}>
                         <div className={styles.actionButtons}>
-                          <button 
+                          <button
                             className={styles.editButton}
                             onClick={() => handleShow(category)}
                             title="Chỉnh sửa"
                           >
                             <FiEdit2 />
                           </button>
-                          <button 
+                          <button
                             className={styles.deleteButton}
                             onClick={() => handleSoftDelete(category._id)}
                             title="Xóa"
@@ -360,7 +396,7 @@ function ListCategories() {
                 </tbody>
               </table>
             </div>
-            
+
             <div className={`${styles.pagination} ${styles.advanced}`}>
               <button
                 onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
@@ -375,17 +411,24 @@ function ListCategories() {
               </span>
 
               <button
-                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                onClick={() =>
+                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                }
                 disabled={currentPage === totalPages}
                 className={styles.pageButton}
               >
                 Trang sau →
               </button>
-            </div>  
+            </div>
           </>
         )}
 
-        <Modal show={show} onHide={handleClose} className={styles.customModal} size="lg">
+        <Modal
+          show={show}
+          onHide={handleClose}
+          className={styles.customModal}
+          size="lg"
+        >
           <Modal.Header closeButton className={styles.modalHeader}>
             <Modal.Title className={styles.modalTitle}>
               {editId ? "Cập nhật" : "Thêm mới"} danh mục
@@ -429,7 +472,7 @@ function ListCategories() {
               {/* Image Upload Section */}
               <div className={styles.formGroup}>
                 <label className={styles.formLabel}>Logo danh mục</label>
-                
+
                 <div className={styles.imageUploadContainer}>
                   {/* File Input */}
                   <div className={styles.fileInputWrapper}>
@@ -441,9 +484,11 @@ function ListCategories() {
                       className={styles.fileInput}
                       hidden
                     />
-                    <label 
-                      htmlFor="logoUpload" 
-                      className={`${styles.fileInputLabel} ${isDragOver ? styles.dragOver : ''}`}
+                    <label
+                      htmlFor="logoUpload"
+                      className={`${styles.fileInputLabel} ${
+                        isDragOver ? styles.dragOver : ""
+                      }`}
                       onDragEnter={handleDragEnter}
                       onDragOver={handleDragOver}
                       onDragLeave={handleDragLeave}
@@ -451,7 +496,9 @@ function ListCategories() {
                     >
                       <FiUpload className={styles.uploadIcon} />
                       <span>
-                        {isDragOver ? 'Thả file ảnh vào đây!' : 'Chọn ảnh từ máy tính hoặc kéo thả vào đây'}
+                        {isDragOver
+                          ? "Thả file ảnh vào đây!"
+                          : "Chọn ảnh từ máy tính hoặc kéo thả vào đây"}
                       </span>
                       <small>JPG, PNG, GIF, WebP - Tối đa 5MB</small>
                     </label>
@@ -461,12 +508,12 @@ function ListCategories() {
                   {imagePreview && (
                     <div className={styles.imagePreviewContainer}>
                       <div className={styles.imagePreview}>
-                        <img 
-                          src={imagePreview} 
-                          alt="Preview" 
+                        <img
+                          src={imagePreview}
+                          alt="Preview"
                           className={styles.previewImage}
                         />
-                        <button 
+                        <button
                           type="button"
                           className={styles.removeImageButton}
                           onClick={handleRemoveImage}
@@ -475,7 +522,7 @@ function ListCategories() {
                           <FiX />
                         </button>
                       </div>
-                      
+
                       {selectedFile && (
                         <div className={styles.fileInfo}>
                           <p className={styles.fileName}>{selectedFile.name}</p>
@@ -484,7 +531,7 @@ function ListCategories() {
                           </p>
                         </div>
                       )}
-                      
+
                       {uploadingImage && (
                         <div className={styles.uploadProgress}>
                           <div className={styles.uploadSpinner}></div>
@@ -495,7 +542,7 @@ function ListCategories() {
                   )}
                 </div>
               </div>
-              
+
               <div className={styles.formGroup}>
                 <label className={styles.formLabel}>
                   <span>Mô tả</span>
@@ -505,14 +552,16 @@ function ListCategories() {
                   rows={4}
                   className={styles.formTextarea}
                   value={form.description}
-                  onChange={(e) => setForm({ ...form, description: e.target.value })}
+                  onChange={(e) =>
+                    setForm({ ...form, description: e.target.value })
+                  }
                   placeholder="Nhập mô tả cho danh mục..."
                   required
                 />
               </div>
             </Modal.Body>
             <Modal.Footer className={styles.modalFooter}>
-              <button 
+              <button
                 type="button"
                 className={`${styles.modalButton} ${styles.secondaryButton}`}
                 onClick={handleClose}
@@ -520,7 +569,7 @@ function ListCategories() {
               >
                 Hủy
               </button>
-              <button 
+              <button
                 type="submit"
                 className={`${styles.modalButton} ${styles.primaryButton}`}
                 disabled={loading || uploadingImage}
@@ -528,10 +577,16 @@ function ListCategories() {
                 {loading || uploadingImage ? (
                   <span className={styles.loadingText}>
                     <div className={styles.miniSpinner}></div>
-                    {uploadingImage ? "Đang upload..." : editId ? "Đang cập nhật..." : "Đang thêm..."}
+                    {uploadingImage
+                      ? "Đang upload..."
+                      : editId
+                      ? "Đang cập nhật..."
+                      : "Đang thêm..."}
                   </span>
+                ) : editId ? (
+                  "Cập nhật"
                 ) : (
-                  editId ? "Cập nhật" : "Thêm mới"
+                  "Thêm mới"
                 )}
               </button>
             </Modal.Footer>
@@ -542,4 +597,4 @@ function ListCategories() {
   );
 }
 
-export default ListCategories;
+export default ListBrands;

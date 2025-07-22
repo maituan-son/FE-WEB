@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react";
 
 const FooterAdmin = () => {
-  return (
-    <div>FooterAdmin</div>
-  )
-}
+  return <div></div>;
+};
 
-export default FooterAdmin
+export default FooterAdmin;

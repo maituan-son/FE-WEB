@@ -1,9 +1,11 @@
+import React from 'react';
 import styled from "@emotion/styled";
 import { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import FooterAdmin from "../FooterAdmin";
 import HeaderAdmin from "../HeaderAdmin";
 import SideBarAdmin from "../SideBarAdmin";
+import { useBootstrap } from "../../hooks/useBootstrap";
 
 const LayoutWrapper = styled.div`
   display: flex;
@@ -33,7 +35,7 @@ const Content = styled.main`
   padding: 16px 24px;
   overflow-y: auto;
   background-color: transparent;
-  height: calc(100vh - 140px); /* Trừ chiều cao header + footer */
+  height: calc(100vh - 140px);
 
   @media (max-width: 1024px) {
     padding: 12px 16px;
@@ -58,6 +60,9 @@ const FooterContainer = styled.div`
 const AdminLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
+  
+  // Load Bootstrap chỉ cho admin
+  useBootstrap();
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");

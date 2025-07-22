@@ -16,7 +16,6 @@ const SidebarWrapper = styled.aside`
   width: ${(props) => (props.collapsed ? "80px" : "280px")};
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  backdrop-filter: blur(20px);
   color: #ffffff;
   height: 100vh;
   padding: 24px 16px;
@@ -26,6 +25,7 @@ const SidebarWrapper = styled.aside`
   position: relative;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
   border-right: 1px solid rgba(255, 255, 255, 0.1);
+  overflow-y: auto;
 
   &::before {
     content: "";
@@ -35,14 +35,14 @@ const SidebarWrapper = styled.aside`
     right: 0;
     bottom: 0;
     background: rgba(255, 255, 255, 0.02);
-    backdrop-filter: blur(10px);
     border-radius: 0 20px 20px 0;
+    pointer-events: none;
   }
 
   @media (max-width: 768px) {
     position: fixed;
     z-index: 1000;
-    height: 100%;
+    height: 100vh;
     left: ${(props) => (props.collapsed ? "-280px" : "0")};
     width: 280px;
     transition: left 0.3s ease;
@@ -77,7 +77,7 @@ const LogoText = styled.span`
   font-size: 20px;
   font-weight: 700;
   color: white;
-  display: ${(props) => (props.collapsed ? "none" : "block")};
+  display: ${(props) => (props.$collapsed ? "none" : "block")};
   transition: opacity 0.3s ease;
 `;
 
@@ -130,7 +130,7 @@ const SectionTitle = styled.h3`
   letter-spacing: 1px;
   margin-bottom: 12px;
   padding-left: 16px;
-  display: ${(props) => (props.collapsed ? "none" : "block")};
+  display: ${(props) => (props.$collapsed ? "none" : "block")};
 `;
 
 const StyledNavLink = styled(NavLink)`
@@ -143,7 +143,7 @@ const StyledNavLink = styled(NavLink)`
   border-radius: 16px;
   text-decoration: none;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  justify-content: ${(props) => (props.collapsed ? "center" : "flex-start")};
+  justify-content: ${(props) => (props.$collapsed ? "center" : "flex-start")};
   position: relative;
   overflow: hidden;
   margin-bottom: 4px;
@@ -205,7 +205,7 @@ const StyledNavLink = styled(NavLink)`
 `;
 
 const LabelText = styled.span`
-  display: ${(props) => (props.collapsed ? "none" : "inline")};
+  display: ${(props) => (props.$collapsed ? "none" : "inline")};
   transition: opacity 0.3s ease;
   font-size: 15px;
   font-weight: 500;
@@ -221,7 +221,7 @@ const Divider = styled.div`
     transparent
   );
   margin: 16px 0;
-  display: ${(props) => (props.collapsed ? "none" : "block")};
+  display: ${(props) => (props.$collapsed ? "none" : "block")};
 `;
 
 const mainMenuItems = [
@@ -233,7 +233,7 @@ const mainMenuItems = [
   { to: "subcategories", label: "Danh mục con", icon: <FiBox /> },
   { to: "attribute", label: "Thuộc tính", icon: <FiBox /> },
   { to: "attribute-values", label: "Giá trị thuộc tính", icon: <FiBox /> },
-  // { to: "variants", label: "Biến thể sản phẩm", icon: <FiBox /> },
+  { to: "brands", label: "Thương hiệu", icon: <FiBox /> },
   { to: "blogs", label: "Bài viết", icon: <FiBox /> },
   { to: "comments", label: "Bình luận", icon: <FiBox /> },
 ];
@@ -252,38 +252,28 @@ const SideBarAdmin = ({ collapsed, onToggle }) => {
 
       <LogoSection>
         <LogoIcon>A</LogoIcon>
-        <LogoText collapsed={collapsed}>Admin Panel</LogoText>
+        <LogoText $collapsed={collapsed}>Admin Panel</LogoText>
       </LogoSection>
 
       <NavList>
         <NavSection>
-          <SectionTitle collapsed={collapsed}>Chính</SectionTitle>
+          <SectionTitle $collapsed={collapsed}>Chính</SectionTitle>
           {mainMenuItems.map(({ to, label, icon }) => (
-            <StyledNavLink
-              key={label}
-              to={to}
-              end
-              collapsed={collapsed ? 1 : 0}
-            >
+            <StyledNavLink key={label} to={to} end $collapsed={collapsed}>
               {icon}
-              <LabelText collapsed={collapsed ? 1 : 0}>{label}</LabelText>
+              <LabelText $collapsed={collapsed}>{label}</LabelText>
             </StyledNavLink>
           ))}
         </NavSection>
 
-        <Divider collapsed={collapsed} />
+        <Divider $collapsed={collapsed} />
 
         <NavSection>
-          <SectionTitle collapsed={collapsed}>Hệ thống</SectionTitle>
+          <SectionTitle $collapsed={collapsed}>Hệ thống</SectionTitle>
           {systemMenuItems.map(({ to, label, icon }) => (
-            <StyledNavLink
-              key={label}
-              to={to}
-              end
-              collapsed={collapsed ? 1 : 0}
-            >
+            <StyledNavLink key={label} to={to} end $collapsed={collapsed}>
               {icon}
-              <LabelText collapsed={collapsed ? 1 : 0}>{label}</LabelText>
+              <LabelText $collapsed={collapsed}>{label}</LabelText>
             </StyledNavLink>
           ))}
         </NavSection>

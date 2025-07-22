@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Modal, Form } from "react-bootstrap";
 import { toast } from "react-toastify";
 import styles from "./Trashproducts.module.css";
+
 import {
   FiTrash2,
   FiRotateCcw,

@@ -1,18 +1,20 @@
-import RouterApp from './routers'
-import { RouterProvider } from 'react-router-dom'
+import RouterApp from "./routers";
+import { RouterProvider } from "react-router-dom";
+import { CartProvider } from "./contexts/CartContext";
 
-import './App.css'
-import { ToastContainer } from 'react-toastify'
+import "./App.css";
+import "./assets/css/layout.css";
+import { ToastContainer } from "react-toastify";
 
 function App() {
-
-
   return (
     <>
-      <RouterProvider router={RouterApp} />
-       <ToastContainer />
+      <CartProvider>
+        <RouterProvider router={RouterApp} />
+        <ToastContainer />
+      </CartProvider>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
